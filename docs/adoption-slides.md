@@ -24,19 +24,38 @@ A governance and workflow framework enabling safe, high-velocity contributions f
 
 ---
 
-### **Slide 3 — Core Principles**
+### **Slide 3 — Eight Governing Principles**
 
-- **GitHub is the control plane**  
-- **PR-first workflow** ensures safety  
-- **Spec → Plan → Tasks → Implementation**  
-- AI agents follow **exact same workflow** as humans  
-- Branch protection + rule files = **guardrails**  
-- Humans control **approval & risk**  
-- Agents accelerate delivery & improve consistency
+1. **Every contribution is a Pull Request** - No privilege escalation, no bypass routes
+2. **Governance must be inside the SDLC** - GitHub RBAC, branch protections, PR review form the safety perimeter
+3. **Specification is the contract** - All work begins with an approved spec and plan
+4. **Ambiguity requires human judgment** - AI agents act autonomously only under low ambiguity and low risk
+5. **Agents must be modular, audited, and version-controlled** - Their primitives, instructions, and MCP capabilities in source control
+6. **CI/CD is a decision engine** - Build → Measure → Analyze → Decide (BMAD Loop)
+7. **Documentation must live in the repository** - PR-driven doc updates prevent drift
+8. **Knowledge must be explicit** - ADRs preserve the *why* behind the *what*
 
 ---
 
-### **Slide 4 — What AI Agents Can Do**
+### **Slide 4 — Team Structure & Technical Foundation**
+
+**Blended Teams (5 Types):**
+- **team.org.owners** (human, Owner role)
+- **team.human.seniors** (human, Maintain role)
+- **team.human.engineers** (human, Write role)
+- **team.ai.developers** (machine users, Write role - NO ADMIN/OWNER)
+- **team.ai.evaluators** (machine users, Read role)
+
+**Technical Enablers:**
+- **Git Worktrees:** Parallel, isolated agent workspaces (prevents context confusion)
+- **BMAD Loop:** CI/CD as intelligence engine (Build → Measure → Analyze → Decide)
+- **MCP Registry:** Private, human-approved tool allowlist (capability governance)
+
+**Result:** AI agents contribute safely at scale without chaos.
+
+---
+
+### **Slide 5 — What AI Agents Can Do**
 
 **Allowed:**
 - Implement features from specs  
@@ -53,19 +72,24 @@ A governance and workflow framework enabling safe, high-velocity contributions f
 
 ---
 
-### **Slide 5 — Adoption Phases (30-Day Rollout)**
+### **Slide 6 — Adoption Phases (30-Day Rollout)**
 
-**Phase 0** — Preparation  
-Human alignment, branch protection, Spec Kit.
+**Phase 0** — Preparation (Day 0-5)
+Human alignment, branch protection, Eight Principles review.
+✓ Team consensus on workflow and governance
 
-**Phase 1** — Humans-Only  
+**Phase 1** — Humans-Only (Day 6-10)
 PR templates, folder patterns, docs, governance.
+✓ Humans following Spec Kit and PR-first patterns
 
-**Phase 2** — AI-Assisted  
+**Phase 2** — AI-Assisted (Day 11-15)
 Agents help on human branches, no autonomous PRs.
+✓ AI adds velocity without introducing risk
 
-**Phase 3** — AI as Contributors  
-AI-authored branches & PRs with review gates.
+**Phase 3** — AI as Contributors (Day 16-25)
+AI-authored branches & PRs with review gates. **Git Worktrees** enable parallel work.
+✓ Agents contribute safely and frequently
 
-**Phase 4** — Optimization  
-Optional automation: labels, policy gates, cleanup jobs.
+**Phase 4** — Optimization (Day 26-30)
+Automation: labels, policy gates, cleanup jobs.
+✓ Hybrid team operates smoothly at high velocity
