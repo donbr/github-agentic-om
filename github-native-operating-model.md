@@ -38,7 +38,7 @@ Before detailing each technical layer, it is essential to visualize the complete
 The subsequent sections of this whitepaper will unpack each of these layers in detail.
 
 ```mermaid
-%%{init: {"theme":"base", "themeVariables": {"primaryColor":"#f9f9f9","primaryBorderColor":"#333"}}}%%
+%%{init: {"theme":"base", "themeVariables": {"lineColor":"#94a3b8","primaryBorderColor":"#94a3b8","textColor":"#64748b"}}}%%
 flowchart TB
     %% Simplified Overview - Progressive Disclosure Pattern
 
@@ -56,12 +56,12 @@ flowchart TB
     BMAD -.Feedback.-> PLAN
     EXEC -.Updates.-> KNOW
 
-    classDef foundation fill:#e8f5e9,stroke:#4caf50,stroke-width:4px,color:#1b5e20
-    classDef planning fill:#e3f2fd,stroke:#2196f3,stroke-width:3px,color:#0d47a1
-    classDef specification fill:#f3e5f5,stroke:#9c27b0,stroke-width:3px,color:#4a148c
-    classDef execution fill:#fff3e0,stroke:#ff9800,stroke-width:3px,color:#e65100
-    classDef intelligence fill:#ffebee,stroke:#f44336,stroke-width:3px,color:#b71c1c
-    classDef knowledge fill:#e0f2f1,stroke:#009688,stroke-width:3px,color:#004d40
+    classDef foundation fill:#66bb6a,stroke:#388e3c,stroke-width:4px,color:#000000
+    classDef planning fill:#42a5f5,stroke:#1976d2,stroke-width:3px,color:#000000
+    classDef specification fill:#ab47bc,stroke:#7b1fa2,stroke-width:3px,color:#ffffff
+    classDef execution fill:#ffa726,stroke:#f57c00,stroke-width:3px,color:#000000
+    classDef intelligence fill:#ef5350,stroke:#c62828,stroke-width:3px,color:#ffffff
+    classDef knowledge fill:#26a69a,stroke:#00796b,stroke-width:3px,color:#000000
 
     class ORG foundation
     class PLAN planning
@@ -84,7 +84,7 @@ Each layer is explored in detail in its respective section below, with dedicated
 This layer defines the foundational "chassis" of the organization, establishing the security, permissions, and governance model necessary to segregate human and AI agent responsibilities. This is the direct implementation of Principle \#2: *Governance must be inside the SDLC*.
 
 ```mermaid
-%%{init: {"theme":"base", "themeVariables": {"primaryColor":"#e8f5e9","primaryBorderColor":"#4caf50"}}}%%
+%%{init: {"theme":"base", "themeVariables": {"lineColor":"#94a3b8","primaryBorderColor":"#94a3b8","textColor":"#64748b"}}}%%
 flowchart TB
     subgraph ORG["🏛️ GitHub Organization (Control Plane)"]
         direction TB
@@ -117,11 +117,13 @@ flowchart TB
     AIEVAL -.Reads.-> REPOS
     AIDEV --> GHCR
 
-    classDef teamHuman fill:#e3f2fd,stroke:#2196f3,stroke-width:2px
-    classDef teamAI fill:#fff3e0,stroke:#ff9800,stroke-width:2px
-    classDef security fill:#ffebee,stroke:#f44336,stroke-width:2px
-    classDef infra fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
+    classDef foundation fill:#66bb6a,stroke:#388e3c,stroke-width:2px,color:#000000
+    classDef teamHuman fill:#42a5f5,stroke:#1976d2,stroke-width:2px,color:#000000
+    classDef teamAI fill:#ffa726,stroke:#f57c00,stroke-width:2px,color:#000000
+    classDef security fill:#ef5350,stroke:#c62828,stroke-width:2px,color:#ffffff
+    classDef infra fill:#ab47bc,stroke:#7b1fa2,stroke-width:2px,color:#ffffff
 
+    class ORG foundation
     class OWNERS,SENIORS,ENGINEERS teamHuman
     class AIDEV,AIEVAL teamAI
     class MERGE,NOADMIN,WRITE security
@@ -171,7 +173,7 @@ GitHub is treated as the complete "factory floor," not just a code host.
 This layer defines the "what" and "when" of development, configuring GitHub Projects to function as a cross-repository Program Increment (PI) board, inspired by the Scaled Agile Framework (SAFE).¹⁸
 
 ```mermaid
-%%{init: {"theme":"base", "themeVariables": {"primaryColor":"#e3f2fd","primaryBorderColor":"#2196f3"}}}%%
+%%{init: {"theme":"base", "themeVariables": {"lineColor":"#94a3b8","primaryBorderColor":"#94a3b8","textColor":"#64748b"}}}%%
 flowchart LR
     subgraph INTAKE["📥 Work Intake"]
         ISSUE["➕ New Issue<br/><i>Human or AI creates</i>"]
@@ -205,10 +207,12 @@ flowchart LR
     DISPATCHER --> ASSIGN
     ASSIGN -.Triggers.-> PROJECTS
 
-    classDef intake fill:#fff3e0,stroke:#ff9800,stroke-width:2px
-    classDef hierarchy fill:#e8f5e9,stroke:#4caf50,stroke-width:2px
-    classDef automation fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
+    classDef planning fill:#42a5f5,stroke:#1976d2,stroke-width:2px,color:#000000
+    classDef intake fill:#ffa726,stroke:#f57c00,stroke-width:2px,color:#000000
+    classDef hierarchy fill:#66bb6a,stroke:#388e3c,stroke-width:2px,color:#000000
+    classDef automation fill:#ab47bc,stroke:#7b1fa2,stroke-width:2px,color:#ffffff
 
+    class PROJECTS planning
     class ISSUE,FORM intake
     class EPIC,FEATURE,STORY,TASK hierarchy
     class TRIAGE,AIBACKLOG,DISPATCHER,ASSIGN automation
@@ -250,13 +254,14 @@ This is the "intake engine" for the factory floor, formalizing human intent into
 The flow from specification to execution is a collaborative process between humans and agents, governed by auditable artifacts.
 
 ```mermaid
+%%{init: {"theme":"base", "themeVariables": {"primaryColor":"#f8fafc","primaryTextColor":"#1e293b","primaryBorderColor":"#cbd5e1","signalColor":"#64748b","signalTextColor":"#f8fafc","noteBkgColor":"#f8fafc","noteTextColor":"#1e293b","noteBorderColor":"#cbd5e1"}}}%%
 sequenceDiagram
     participant Human as Human Architect/PM
     participant SpecKit as Spec Kit Pipeline
     participant Agent as DeveloperAgent
     participant GitHub as GitHub Repo
 
-    Human->>SpecKit: /specify<br/>“What + Why”
+    Human->>SpecKit: /specify<br/>"What + Why"
     SpecKit->>GitHub: Generate spec.md
 
     Human->>Agent: Trigger /plan
@@ -319,7 +324,7 @@ This layer defines the tactical execution loop for a single work item, detailing
 The agentic lifecycle ensures that all AI-generated work is auditable, isolated, and conforms to the approved plan.
 
 ```mermaid
-%%{init: {"theme":"base", "themeVariables": {"primaryColor":"#fff3e0","primaryBorderColor":"#ff9800"}}}%%
+%%{init: {"theme":"base", "themeVariables": {"lineColor":"#94a3b8","primaryBorderColor":"#94a3b8","textColor":"#64748b"}}}%%
 flowchart TB
     subgraph AGENTS["🤖 Agent Role Taxonomy"]
         direction LR
@@ -358,10 +363,12 @@ flowchart TB
     WT1 --> PLAN
     WT2 --> PLAN
 
-    classDef agent fill:#e3f2fd,stroke:#2196f3,stroke-width:2px
-    classDef worktree fill:#e8f5e9,stroke:#4caf50,stroke-width:2px
-    classDef flow fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
+    classDef execution fill:#ffa726,stroke:#f57c00,stroke-width:2px,color:#000000
+    classDef agent fill:#ffa726,stroke:#f57c00,stroke-width:2px,color:#000000
+    classDef worktree fill:#66bb6a,stroke:#388e3c,stroke-width:2px,color:#000000
+    classDef flow fill:#ab47bc,stroke:#7b1fa2,stroke-width:2px,color:#ffffff
 
+    class AGENTS execution
     class DEV,REFACTOR,SECURITY,EVAL,ARCH,DOC agent
     class MAIN,WT1,WT2,WT3 worktree
     class PLAN,IMPL,PR,REVIEW flow
@@ -376,6 +383,7 @@ flowchart TB
 ### Execution Sequence Diagram
 
 ```mermaid
+%%{init: {"theme":"base", "themeVariables": {"primaryColor":"#f8fafc","primaryTextColor":"#1e293b","primaryBorderColor":"#cbd5e1","signalColor":"#64748b","signalTextColor":"#f8fafc","noteBkgColor":"#f8fafc","noteTextColor":"#1e293b","noteBorderColor":"#cbd5e1"}}}%%
 sequenceDiagram  
     participant Dispatcher  
     participant Agent (Machine User)  
@@ -434,6 +442,7 @@ This synthesizes the entire system into the dynamic, iterative **BMAD (Build-Mea
 The BMAD loop is a closed feedback system, where the outputs of the "Decide" phase automatically generate new work, ensuring continuous improvement.
 
 ```mermaid
+%%{init: {"theme":"base", "themeVariables": {"lineColor":"#94a3b8","primaryBorderColor":"#94a3b8","textColor":"#64748b"}}}%%
 flowchart TB
     PR["Pull Request Opened"]
 
@@ -463,6 +472,18 @@ flowchart TB
     BUILD --> MEASURE
     MEASURE --> ANALYZE
     ANALYZE --> DECIDE
+
+    classDef intelligence fill:#ef5350,stroke:#c62828,stroke-width:3px,color:#ffffff
+    classDef build fill:#66bb6a,stroke:#388e3c,stroke-width:2px,color:#000000
+    classDef measure fill:#42a5f5,stroke:#1976d2,stroke-width:2px,color:#000000
+    classDef analyze fill:#ab47bc,stroke:#7b1fa2,stroke-width:2px,color:#ffffff
+    classDef decide fill:#ffa726,stroke:#f57c00,stroke-width:2px,color:#000000
+
+    class PR intelligence
+    class BUILD,B1,B2,B3 build
+    class MEASURE,COV,RAG,CT,SEC measure
+    class ANALYZE,ANALYZEBOT analyze
+    class DECIDE,CLOSE,TECHDEBT decide
 ```
 
 The loop consists of four distinct stages executed within GitHub Actions:
@@ -503,6 +524,7 @@ This layer defines how the organization documents its products, processes, and a
 This architecture is not a passive repository; it is an active, agent-driven system that enforces Principle \#7 (*Documentation must live in the repository*) and Principle \#8 (*Knowledge must be explicit*). [2, 2]
 
 ```mermaid
+%%{init: {"theme":"base", "themeVariables": {"lineColor":"#94a3b8","primaryBorderColor":"#94a3b8","textColor":"#64748b"}}}%%
 graph TD  
     subgraph Repo  
         direction LR  
@@ -529,6 +551,14 @@ graph TD
 
     Repo --> GHA;  
     PR --> Human;
+
+    classDef knowledge fill:#26a69a,stroke:#00796b,stroke-width:3px,color:#000000
+    classDef process fill:#ab47bc,stroke:#7b1fa2,stroke-width:2px,color:#ffffff
+    classDef review fill:#42a5f5,stroke:#1976d2,stroke-width:2px,color:#000000
+
+    class Repo,DOCS,ADRS knowledge
+    class Process,PR,GHA,DocAgent,DIFF,COMMIT process
+    class Review,Human,ReviewCode,ReviewDocs,Merge review
 ```
 
 ### **1. The "No Wiki" Mandate**
