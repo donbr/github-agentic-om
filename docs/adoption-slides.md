@@ -40,11 +40,11 @@ A governance and workflow framework enabling safe, high-velocity contributions f
 ### **Slide 4 — Team Structure & Technical Foundation**
 
 **Blended Teams (5 Types):**
-- **team.org.owners** (human, Owner role)
-- **team.human.seniors** (human, Maintain role)
-- **team.human.engineers** (human, Write role)
-- **team.ai.developers** (machine users, Write role - NO ADMIN/OWNER)
-- **team.ai.evaluators** (machine users, Read role)
+- **team.org.owners** (human, Owner role) - Ultimate oversight & administration
+- **team.human.seniors** (human, Maintain role) - Tech leads, architects, approvers
+- **team.human.engineers** (human, Write role) - Software developers
+- **team.ai.developers** (machine users, Write role - NO ADMIN/OWNER) - Code contributors
+- **team.ai.evaluators** (machine users, Read role) - Quality analysis & reporting
 
 **Technical Enablers:**
 - **Git Worktrees:** Parallel, isolated agent workspaces (prevents context confusion)
@@ -92,4 +92,5 @@ AI-authored branches & PRs with review gates. **Git Worktrees** enable parallel 
 
 **Phase 4** — Optimization (Day 26-30)
 Automation: labels, policy gates, cleanup jobs.
+Metrics dashboards, scheduled tasks, continuous improvement.
 ✓ Hybrid team operates smoothly at high velocity
