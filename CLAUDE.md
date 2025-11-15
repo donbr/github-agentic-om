@@ -4,9 +4,21 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Repository Purpose
 
-This repository contains a comprehensive whitepaper documenting "The GitHub-Native Agentic Operating Model" - a framework for managing blended human-AI engineering teams using GitHub as the unified coordination and governance plane.
+This repository documents "The GitHub-Native Agentic Operating Model" - a framework for managing blended human-AI engineering teams using GitHub as the unified coordination and governance plane.
 
-The primary artifact is `docs/github-native-operating-model.md`, which defines an operating model grounded in eight core principles for AI-augmented software engineering organizations.
+### Primary Artifacts
+
+- **@docs/github-native-operating-model.md** - Complete 13-part framework (600+ lines)
+- **@docs/adoption-playbook.md** - Phased implementation guide (Phase 0-4)
+- **@docs/adoption-slides.md** - Executive presentation deck
+- **@docs/adoption-overview-diagram.md** - Visual adoption roadmap
+- **@docs/branching-workflow-standard.md** - Canonical workflow (November 2025 practices)
+
+### License and Version
+
+- **License**: MIT License - Open source, freely available for commercial and non-commercial use
+- **Version**: v2.0.0 - Comprehensive operating model with phased adoption guidance
+- **README Structure**: Features "Getting Started" section separating implementation guidance (adoption materials) from deep understanding (operating model)
 
 ## Development Workflow
 
@@ -20,7 +32,7 @@ This repository practices what it preaches - it follows the trunk-based, PR-firs
 
 ### Branch Naming
 
-Use these conventions (from `docs/branching-workflow-standard.md`):
+Use these conventions from @docs/branching-workflow-standard.md:
 
 ```
 feature/<id>-<short-description>
@@ -63,26 +75,64 @@ When creating PRs, use this format (enforced by `dot-cursor/rules/001-core-trunk
 - Use imperative commit messages
 - Delete branches after merge
 
-## Architecture Overview
+### Working on Main Branch
 
-### Document Structure
+If you detect the current branch is `main`:
+- **Avoid making edits** unless the change is trivial AND user explicitly insists
+- For non-trivial work, guide user to create a feature branch first:
+  ```
+  git checkout -b feature/<short-tag>-<description>
+  ```
+- Before any commit, encourage inspection commands:
+  - `git status` - See what's staged
+  - `git diff` - Review changes
+  - `git log --oneline` - Check recent commits
 
-The whitepaper is organized into 13 parts:
+### Git Safety
 
-1. **Part I-III**: Executive overview and guiding principles
-2. **Part IV**: Organizational Operating Model - GitHub org structure, RBAC matrix, and MCP registry
-3. **Part V**: Strategic Planning Layer - GitHub Projects as Program Board
-4. **Part VI**: Specification Layer - Spec Kit workflow (constitution, specs, plans, tasks)
-5. **Part VII**: Agentic Execution Layer - Agent roles, git worktrees, and PR workflows
-6. **Part VIII**: CI/CD as BMAD Loop (Build-Measure-Analyze-Decide)
-7. **Part IX**: Knowledge Architecture - Documentation structure and ADRs
-8. **Part X**: End-to-End Playbooks
-9. **Part XI**: Governance Appendix
-10. **Part XII-XIII**: Conclusion and references
+- **Never suggest force pushes** unless explicitly requested by user
+- Encourage reviewing changes before committing
+- Verify changes align with PR scope
 
-### Core Concepts
+## AI Agent Behavior
 
-**Eight Governing Principles:**
+As an AI contributor to this repository, you must follow the Development Workflow above. Additionally:
+
+### Prohibited Actions
+
+- Never commit directly to `main`
+- Never bypass PR requirements
+- Never make sweeping multi-file changes without explicit user request
+- Never suggest force pushes unless explicitly requested by user
+- If current branch is `main`, avoid making edits (create feature branch instead)
+
+### Required in Pull Requests
+
+- Use the PR structure template shown above
+- Include reasoning summary in Context section
+- Include implementation details
+- Include validation steps in Testing section
+- Include risk assessment in Risks & Rollback section
+- **Explain which files will change and why**
+- **Suggest how to validate the changes**
+
+### Code Change Constraints
+
+When implementing changes:
+- **Keep diffs small** - Avoid large, sweeping modifications
+- **Prefer incremental PRs** - Multiple small PRs are better than one large PR
+- **Avoid structural rewrites** unless explicitly requested by user
+- **Recommend appropriate tests** - Propose tests aligned with the changes
+- **Ensure alignment** with trunk-based workflow and the eight governing principles
+
+This repository is itself a demonstration of the GitHub-Native Agentic Operating Model it documents.
+
+## Key Patterns to Understand
+
+### Eight Governing Principles
+
+The operating model is founded on eight core principles (see Part II of @docs/github-native-operating-model.md or README.md):
+
 1. Every contribution is a Pull Request
 2. Governance must be inside the SDLC
 3. Specification is the contract
@@ -92,84 +142,70 @@ The whitepaper is organized into 13 parts:
 7. Documentation must live in the repository
 8. Knowledge must be explicit
 
-**Key Architectural Patterns:**
-- **Blended Teams**: Five team types (org.owners, human.seniors, human.engineers, ai.developers, ai.evaluators)
-- **RBAC Matrix**: Strict role-based access control preventing AI agents from having Admin/Owner roles
-- **Risk & Ambiguity Routing**: Matrix for determining human-in-the-loop checkpoints
-- **Spec-Driven Development**: Using GitHub Spec Kit (/specify, /plan, /tasks, /implement)
-- **Git Worktrees**: Parallel, isolated workspaces for multi-agent development
-- **BMAD Loop**: CI/CD as an intelligence engine (Build → Measure → Analyze → Decide)
+### Git Worktrees
 
-## Working with This Repository
+**Critical for multi-agent development**: Git worktrees enable parallel agent work in isolated workspaces, preventing context confusion when multiple agents work simultaneously. Each agent operates in its own worktree without conflicts. See Part VII of the operating model for implementation details.
 
-### Document Editing Guidelines
+### Spec-Driven Development
 
-When editing `docs/github-native-operating-model.md`:
+All work follows the GitHub Spec Kit workflow: Constitution → Spec → Plan → Tasks → Implementation. See Part VI for details.
 
-1. **Preserve Structure**: Maintain the 13-part organization and hierarchical numbering
-2. **Maintain References**: All citations use superscript numbers (e.g., ¹, ²) linking to Part XIII
-3. **Code Blocks**: Mermaid diagrams are embedded as "Code snippet" blocks
-4. **Consistent Terminology**: Use established terms (BMAD, RBAC, MCP Registry, Spec Kit, etc.)
-5. **Principle Alignment**: Ensure all recommendations align with the eight core principles
+### Risk & Ambiguity Routing
 
-### Key Files
+The operating model includes a matrix for determining human-in-the-loop checkpoints based on risk and ambiguity levels. See Part VI for the routing matrix.
 
-- `github-native-operating-model.md`: The complete whitepaper (500+ lines)
-- `docs/branching-workflow-standard.md`: Canonical branching and workflow model (tool-agnostic)
-- `docs/tooling/cursor-ruleset-v1.md`: How Cursor rules enforce the workflow
-- `dot-cursor/rules/*.mdc`: Cursor enforcement rules (trunk-based PR-first workflow)
-- `dot-github/`: GitHub templates (PR template, branch protection examples)
-- `.mcp.json`: MCP server configuration (includes ai-docs-server for documentation fetching)
+## Editing the Operating Model
 
-### Content Coherence
+When editing @docs/github-native-operating-model.md:
 
-The whitepaper follows a layered architecture metaphor:
-- Layer 1 (Foundation): Organizational governance
-- Layer 2 (Planning): Strategic work intake
-- Layer 3 (Specification): Human intent → machine-readable specs
-- Layer 4 (Execution): Agentic implementation
-- Layer 5 (Intelligence): CI/CD feedback loop
-- Layer 6 (Knowledge): Documentation and ADRs
+### Critical Rules
 
-All sections should maintain consistency with this architectural stack and the flow: governance → planning → specification → execution → measurement → knowledge.
+1. **Preserve Structure**: Maintain the 13-part organization (Parts I-XIII) and hierarchical numbering
+2. **Maintain References**: All citations use superscript numbers (¹, ²) linking to Part XIII
+3. **Consistent Terminology**: Use established terms (BMAD, RBAC Matrix, MCP Registry, Spec Kit, Git Worktrees)
+4. **Principle Alignment**: Ensure all recommendations align with the eight governing principles
 
-### Citation Management
+### Detailed Guidelines
 
-References in Part XIII use a specific format:
-- Numbered list items (1-59)
-- Title, access date, and URL
-- Sources include GitHub Docs, GitHub Blog, academic papers, and industry resources
+See CONTRIBUTING.md for:
+- Complete 13-part structure breakdown
+- Citation format specifications
+- Mermaid diagram guidelines
+- Content coherence requirements
+- Terminology reference
 
-When adding new references, maintain this format and add them to Part XIII in sequential order.
+## Working with Adoption Materials
 
-### Mermaid Diagrams
+When working on @docs/adoption-*.md files:
 
-The whitepaper contains several Mermaid diagrams:
-- Part III: Layered architecture flowchart
-- Part VI: Specification sequence diagram
-- Part VIII: BMAD loop graph
-- Part IX: Knowledge architecture graph
+1. **Maintain consistency** across the three formats (playbook, slides, diagram)
+2. **Preserve the phased structure**: Phase 0 (Preparation) → Phase 4 (Optimization & Automation)
+3. **Align with the operating model**: All adoption guidance must reflect the eight governing principles
+4. **Reference existing patterns**: Link to whitepaper sections rather than duplicating content
+5. **Keep adoption materials high-level**: These are roadmaps, not detailed implementation guides
 
-When modifying diagrams, ensure they align with the narrative content and use consistent node naming conventions.
+### Recent Enhancements to Adoption Playbook
 
-## MCP Server Configuration
+The adoption playbook now includes:
+- **Phase 0**: Explicit reference to the Eight Governing Principles
+- **Phase 3**: Complete branch naming patterns (feature, bugfix, refactor, docs) with explanations
+- **Phase 3**: Git Worktrees section explaining parallel agent development infrastructure
 
-This repository uses several MCP servers defined in `.mcp.json`:
-- `mcp-server-time`: Time/timezone utilities
-- `sequential-thinking`: Sequential reasoning tool
-- `Context7`: Library documentation fetcher
-- `ai-docs-server` and `ai-docs-server-full`: Documentation access for MCP, LangChain, LangGraph, and Anthropic docs
+## Reference Configurations
 
-These servers support research and documentation tasks related to the operating model.
+The repository includes enforcement patterns in:
+- `dot-cursor/rules/*.mdc` - Cursor enforcement rules
+- `dot-github/` - GitHub templates (PR template, branch protection examples)
+- `.mcp.json` - MCP server configuration (time, sequential-thinking, Context7, ai-docs-server)
 
-## AI Agent Behavior
+Note: `dot-cursor/` and `dot-github/` use `dot-` prefix to prevent automatic application. Review and rename to `.cursor/` and `.github/` to activate.
 
-As an AI contributor to this repository, you must:
+## For Human Contributors
 
-1. **Work only on short-lived branches** - never commit directly to `main`
-2. **Use the PR structure above** when creating Pull Requests
-3. **Include reasoning and validation steps** in all PRs
-4. **Make small, incremental commits** - avoid multi-file sweeping rewrites unless explicitly requested
-5. **Respect branch protection** - PRs are the human-in-the-loop safety checkpoint
-
-This repository is itself a demonstration of the GitHub-Native Agentic Operating Model it documents.
+See CONTRIBUTING.md for:
+- Development environment setup
+- Detailed editing conventions
+- Pull request process
+- Citation management
+- Mermaid diagram guidelines
+- Code of conduct

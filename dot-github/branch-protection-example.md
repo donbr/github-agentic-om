@@ -11,4 +11,4 @@ Recommended GitHub settings for the `main` branch:
 - (Optional) Require linear history.
 
 These settings align with the trunk-based, PR-first workflow
-described in `docs/branching_workflow_standard.md`.
+described in `docs/branching-workflow-standard.md`.
