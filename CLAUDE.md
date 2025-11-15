@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This repository contains a comprehensive whitepaper documenting "The GitHub-Native Agentic Operating Model" - a framework for managing blended human-AI engineering teams using GitHub as the unified coordination and governance plane.
 
-The primary artifact is `github-native-operating-model.md`, which defines an operating model grounded in eight core principles for AI-augmented software engineering organizations.
+The primary artifact is `docs/github-native-operating-model.md`, which defines an operating model grounded in eight core principles for AI-augmented software engineering organizations.
 
 ## Development Workflow
 
@@ -104,7 +104,7 @@ The whitepaper is organized into 13 parts:
 
 ### Document Editing Guidelines
 
-When editing `github-native-operating-model.md`:
+When editing `docs/github-native-operating-model.md`:
 
 1. **Preserve Structure**: Maintain the 13-part organization and hierarchical numbering
 2. **Maintain References**: All citations use superscript numbers (e.g., ¹, ²) linking to Part XIII
