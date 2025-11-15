@@ -8,6 +8,61 @@ This repository contains a comprehensive whitepaper documenting "The GitHub-Nati
 
 The primary artifact is `github-native-operating-model.md`, which defines an operating model grounded in eight core principles for AI-augmented software engineering organizations.
 
+## Development Workflow
+
+This repository practices what it preaches - it follows the trunk-based, PR-first workflow documented in the whitepaper.
+
+### Branch Protection
+
+- **`main` is protected** - treat it as the always-deployable trunk
+- **Never commit directly to `main`** - all changes must go through Pull Requests
+- **Create short-lived feature branches** for all non-trivial work
+
+### Branch Naming
+
+Use these conventions (from `docs/branching-workflow-standard.md`):
+
+```
+feature/<id>-<short-description>
+bugfix/<issue-id>-<fix>
+refactor/<area>
+docs/<topic>
+```
+
+Examples:
+```
+feature/143-add-neo4j-gds-loader
+bugfix/77-fix-ragas-metric
+docs/update-contribution-guide
+```
+
+### Pull Request Structure
+
+When creating PRs, use this format (enforced by `dot-cursor/rules/001-core-trunk-pr-first.mdc`):
+
+```markdown
+## Summary
+- <1-3 bullets>
+
+## Context
+- <why this exists>
+
+## Implementation Details
+- <design choices>
+
+## Testing
+- <validation steps>
+
+## Risks & Rollback
+- <revert plan>
+```
+
+### Commits
+
+- Keep commits small and focused
+- Use imperative commit messages
+- Delete branches after merge
+
 ## Architecture Overview
 
 ### Document Structure
@@ -60,6 +115,10 @@ When editing `github-native-operating-model.md`:
 ### Key Files
 
 - `github-native-operating-model.md`: The complete whitepaper (500+ lines)
+- `docs/branching-workflow-standard.md`: Canonical branching and workflow model (tool-agnostic)
+- `docs/tooling/cursor-ruleset-v1.md`: How Cursor rules enforce the workflow
+- `dot-cursor/rules/*.mdc`: Cursor enforcement rules (trunk-based PR-first workflow)
+- `dot-github/`: GitHub templates (PR template, branch protection examples)
 - `.mcp.json`: MCP server configuration (includes ai-docs-server for documentation fetching)
 
 ### Content Coherence
@@ -102,3 +161,15 @@ This repository uses several MCP servers defined in `.mcp.json`:
 - `ai-docs-server` and `ai-docs-server-full`: Documentation access for MCP, LangChain, LangGraph, and Anthropic docs
 
 These servers support research and documentation tasks related to the operating model.
+
+## AI Agent Behavior
+
+As an AI contributor to this repository, you must:
+
+1. **Work only on short-lived branches** - never commit directly to `main`
+2. **Use the PR structure above** when creating Pull Requests
+3. **Include reasoning and validation steps** in all PRs
+4. **Make small, incremental commits** - avoid multi-file sweeping rewrites unless explicitly requested
+5. **Respect branch protection** - PRs are the human-in-the-loop safety checkpoint
+
+This repository is itself a demonstration of the GitHub-Native Agentic Operating Model it documents.
