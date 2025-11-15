@@ -38,7 +38,7 @@ Before detailing each technical layer, it is essential to visualize the complete
 The subsequent sections of this whitepaper will unpack each of these layers in detail.
 
 ```mermaid
-%%{init: {"theme":"base", "themeVariables": {"lineColor":"#94a3b8","primaryBorderColor":"#94a3b8","textColor":"#64748b"}}}%%
+%%{init: {"theme":"base", "themeVariables": {"lineColor":"#64748B","primaryBorderColor":"#64748B","textColor":"#1E293B","background":"#FFFFFF"}}}%%
 flowchart TB
     %% Simplified Overview - Progressive Disclosure Pattern
 
@@ -56,12 +56,12 @@ flowchart TB
     BMAD -.Feedback.-> PLAN
     EXEC -.Updates.-> KNOW
 
-    classDef foundation fill:#66bb6a,stroke:#388e3c,stroke-width:4px,color:#000000
-    classDef planning fill:#42a5f5,stroke:#1976d2,stroke-width:3px,color:#000000
-    classDef specification fill:#ab47bc,stroke:#7b1fa2,stroke-width:3px,color:#ffffff
-    classDef execution fill:#ffa726,stroke:#f57c00,stroke-width:3px,color:#000000
-    classDef intelligence fill:#ef5350,stroke:#c62828,stroke-width:3px,color:#ffffff
-    classDef knowledge fill:#26a69a,stroke:#00796b,stroke-width:3px,color:#000000
+    classDef foundation fill:#E0E7FF,stroke:#4338CA,stroke-width:4px,color:#1E1B4B
+    classDef planning fill:#DBEAFE,stroke:#1D4ED8,stroke-width:3px,color:#1E3A8A
+    classDef specification fill:#E0F2FE,stroke:#0369A1,stroke-width:3px,color:#0C4A6E
+    classDef execution fill:#CCFBF1,stroke:#0F766E,stroke-width:3px,color:#134E4A
+    classDef intelligence fill:#FEF3C7,stroke:#CA8A04,stroke-width:3px,color:#422006
+    classDef knowledge fill:#E9D5FF,stroke:#7C3AED,stroke-width:3px,color:#3B0764
 
     class ORG foundation
     class PLAN planning
@@ -84,7 +84,7 @@ Each layer is explored in detail in its respective section below, with dedicated
 This layer defines the foundational "chassis" of the organization, establishing the security, permissions, and governance model necessary to segregate human and AI agent responsibilities. This is the direct implementation of Principle \#2: *Governance must be inside the SDLC*.
 
 ```mermaid
-%%{init: {"theme":"base", "themeVariables": {"lineColor":"#94a3b8","primaryBorderColor":"#94a3b8","textColor":"#64748b"}}}%%
+%%{init: {"theme":"base", "themeVariables": {"lineColor":"#64748B","primaryBorderColor":"#64748B","textColor":"#1E293B","background":"#FFFFFF"}}}%%
 flowchart TB
     subgraph ORG["🏛️ GitHub Organization (Control Plane)"]
         direction TB
@@ -117,11 +117,11 @@ flowchart TB
     AIEVAL -.Reads.-> REPOS
     AIDEV --> GHCR
 
-    classDef foundation fill:#66bb6a,stroke:#388e3c,stroke-width:2px,color:#000000
-    classDef teamHuman fill:#42a5f5,stroke:#1976d2,stroke-width:2px,color:#000000
-    classDef teamAI fill:#ffa726,stroke:#f57c00,stroke-width:2px,color:#000000
-    classDef security fill:#ef5350,stroke:#c62828,stroke-width:2px,color:#ffffff
-    classDef infra fill:#ab47bc,stroke:#7b1fa2,stroke-width:2px,color:#ffffff
+    classDef foundation fill:#E0E7FF,stroke:#4338CA,stroke-width:2px,color:#1E1B4B
+    classDef teamHuman fill:#DBEAFE,stroke:#1D4ED8,stroke-width:2px,color:#1E3A8A
+    classDef teamAI fill:#FEF3C7,stroke:#CA8A04,stroke-width:2px,color:#422006
+    classDef security fill:#FEE2E2,stroke:#DC2626,stroke-width:2px,color:#7F1D1D
+    classDef infra fill:#E9D5FF,stroke:#7C3AED,stroke-width:2px,color:#3B0764
 
     class ORG foundation
     class OWNERS,SENIORS,ENGINEERS teamHuman
@@ -173,7 +173,7 @@ GitHub is treated as the complete "factory floor," not just a code host.
 This layer defines the "what" and "when" of development, configuring GitHub Projects to function as a cross-repository Program Increment (PI) board, inspired by the Scaled Agile Framework (SAFE).¹⁸
 
 ```mermaid
-%%{init: {"theme":"base", "themeVariables": {"lineColor":"#94a3b8","primaryBorderColor":"#94a3b8","textColor":"#64748b"}}}%%
+%%{init: {"theme":"base", "themeVariables": {"lineColor":"#64748B","primaryBorderColor":"#64748B","textColor":"#1E293B","background":"#FFFFFF"}}}%%
 flowchart LR
     subgraph INTAKE["📥 Work Intake"]
         ISSUE["➕ New Issue<br/><i>Human or AI creates</i>"]
@@ -207,10 +207,10 @@ flowchart LR
     DISPATCHER --> ASSIGN
     ASSIGN -.Triggers.-> PROJECTS
 
-    classDef planning fill:#42a5f5,stroke:#1976d2,stroke-width:2px,color:#000000
-    classDef intake fill:#ffa726,stroke:#f57c00,stroke-width:2px,color:#000000
-    classDef hierarchy fill:#66bb6a,stroke:#388e3c,stroke-width:2px,color:#000000
-    classDef automation fill:#ab47bc,stroke:#7b1fa2,stroke-width:2px,color:#ffffff
+    classDef planning fill:#DBEAFE,stroke:#1D4ED8,stroke-width:2px,color:#1E3A8A
+    classDef intake fill:#FEF3C7,stroke:#CA8A04,stroke-width:2px,color:#422006
+    classDef hierarchy fill:#E0E7FF,stroke:#4338CA,stroke-width:2px,color:#1E1B4B
+    classDef automation fill:#E9D5FF,stroke:#7C3AED,stroke-width:2px,color:#3B0764
 
     class PROJECTS planning
     class ISSUE,FORM intake
@@ -254,7 +254,7 @@ This is the "intake engine" for the factory floor, formalizing human intent into
 The flow from specification to execution is a collaborative process between humans and agents, governed by auditable artifacts.
 
 ```mermaid
-%%{init: {"theme":"base", "themeVariables": {"primaryColor":"#f8fafc","primaryTextColor":"#1e293b","primaryBorderColor":"#cbd5e1","signalColor":"#64748b","signalTextColor":"#f8fafc","noteBkgColor":"#f8fafc","noteTextColor":"#1e293b","noteBorderColor":"#cbd5e1"}}}%%
+%%{init: {"theme":"base", "themeVariables": {"primaryColor":"#E0E7FF","primaryTextColor":"#1E293B","primaryBorderColor":"#64748B","signalColor":"#1E293B","signalTextColor":"#1E293B","actorLineColor":"#94A3B8","actorBkg":"#F8FAFC","actorBorder":"#64748B","actorTextColor":"#1E293B","labelBoxBkgColor":"#F8FAFC","labelTextColor":"#1E293B","activationBorderColor":"#64748B","activationBkgColor":"#F8FAFC","noteBkgColor":"#F8FAFC","noteTextColor":"#1E293B","noteBorderColor":"#94A3B8"}}}%%
 sequenceDiagram
     participant Human as Human Architect/PM
     participant SpecKit as Spec Kit Pipeline
@@ -324,7 +324,7 @@ This layer defines the tactical execution loop for a single work item, detailing
 The agentic lifecycle ensures that all AI-generated work is auditable, isolated, and conforms to the approved plan.
 
 ```mermaid
-%%{init: {"theme":"base", "themeVariables": {"lineColor":"#94a3b8","primaryBorderColor":"#94a3b8","textColor":"#64748b"}}}%%
+%%{init: {"theme":"base", "themeVariables": {"lineColor":"#64748B","primaryBorderColor":"#64748B","textColor":"#1E293B","background":"#FFFFFF"}}}%%
 flowchart TB
     subgraph AGENTS["🤖 Agent Role Taxonomy"]
         direction LR
@@ -363,10 +363,10 @@ flowchart TB
     WT1 --> PLAN
     WT2 --> PLAN
 
-    classDef execution fill:#ffa726,stroke:#f57c00,stroke-width:2px,color:#000000
-    classDef agent fill:#ffa726,stroke:#f57c00,stroke-width:2px,color:#000000
-    classDef worktree fill:#66bb6a,stroke:#388e3c,stroke-width:2px,color:#000000
-    classDef flow fill:#ab47bc,stroke:#7b1fa2,stroke-width:2px,color:#ffffff
+    classDef execution fill:#FEF3C7,stroke:#CA8A04,stroke-width:2px,color:#422006
+    classDef agent fill:#FEF3C7,stroke:#CA8A04,stroke-width:2px,color:#422006
+    classDef worktree fill:#E0E7FF,stroke:#4338CA,stroke-width:2px,color:#1E1B4B
+    classDef flow fill:#E9D5FF,stroke:#7C3AED,stroke-width:2px,color:#3B0764
 
     class AGENTS execution
     class DEV,REFACTOR,SECURITY,EVAL,ARCH,DOC agent
@@ -383,11 +383,11 @@ flowchart TB
 ### Execution Sequence Diagram
 
 ```mermaid
-%%{init: {"theme":"base", "themeVariables": {"primaryColor":"#f8fafc","primaryTextColor":"#1e293b","primaryBorderColor":"#cbd5e1","signalColor":"#64748b","signalTextColor":"#f8fafc","noteBkgColor":"#f8fafc","noteTextColor":"#1e293b","noteBorderColor":"#cbd5e1"}}}%%
-sequenceDiagram  
-    participant Dispatcher  
-    participant Agent (Machine User)  
-    participant Git (Repo)  
+%%{init: {"theme":"base", "themeVariables": {"primaryColor":"#E0E7FF","primaryTextColor":"#1E293B","primaryBorderColor":"#64748B","signalColor":"#1E293B","signalTextColor":"#1E293B","actorLineColor":"#94A3B8","actorBkg":"#F8FAFC","actorBorder":"#64748B","actorTextColor":"#1E293B","labelBoxBkgColor":"#F8FAFC","labelTextColor":"#1E293B","activationBorderColor":"#64748B","activationBkgColor":"#F8FAFC","noteBkgColor":"#F8FAFC","noteTextColor":"#1E293B","noteBorderColor":"#94A3B8"}}}%%
+sequenceDiagram
+    participant Dispatcher
+    participant Agent (Machine User)
+    participant Git (Repo)
     participant Human (Senior Dev)
 
     Dispatcher->>Agent: Assigns Issue #123
@@ -399,8 +399,8 @@ sequenceDiagram
     Note over Agent,Git: Commits 'Plan SHA' for audit.
     Agent->>Git: commit -m "feat(123): Implement auth logic"
     Agent->>Git: commit -m "test(123): Add unit tests"
-    Agent->>Git: open PR -t "Fixes #123" -b "..."  
-    Note over Agent,Git: PR Body includes Plan-SHA and tags human.  
+    Agent->>Git: open PR -t "Fixes #123" -b "..."
+    Note over Agent,Git: PR Body includes Plan-SHA and tags human.
     Git-->>Human: Request PR Review
 ```
 
@@ -442,7 +442,7 @@ This synthesizes the entire system into the dynamic, iterative **BMAD (Build-Mea
 The BMAD loop is a closed feedback system, where the outputs of the "Decide" phase automatically generate new work, ensuring continuous improvement.
 
 ```mermaid
-%%{init: {"theme":"base", "themeVariables": {"lineColor":"#94a3b8","primaryBorderColor":"#94a3b8","textColor":"#64748b"}}}%%
+%%{init: {"theme":"base", "themeVariables": {"lineColor":"#64748B","primaryBorderColor":"#64748B","textColor":"#1E293B","background":"#FFFFFF"}}}%%
 flowchart TB
     PR["Pull Request Opened"]
 
@@ -473,11 +473,11 @@ flowchart TB
     MEASURE --> ANALYZE
     ANALYZE --> DECIDE
 
-    classDef intelligence fill:#ef5350,stroke:#c62828,stroke-width:3px,color:#ffffff
-    classDef build fill:#66bb6a,stroke:#388e3c,stroke-width:2px,color:#000000
-    classDef measure fill:#42a5f5,stroke:#1976d2,stroke-width:2px,color:#000000
-    classDef analyze fill:#ab47bc,stroke:#7b1fa2,stroke-width:2px,color:#ffffff
-    classDef decide fill:#ffa726,stroke:#f57c00,stroke-width:2px,color:#000000
+    classDef intelligence fill:#FEF3C7,stroke:#CA8A04,stroke-width:3px,color:#422006
+    classDef build fill:#E0E7FF,stroke:#4338CA,stroke-width:2px,color:#1E1B4B
+    classDef measure fill:#DBEAFE,stroke:#1D4ED8,stroke-width:2px,color:#1E3A8A
+    classDef analyze fill:#E9D5FF,stroke:#7C3AED,stroke-width:2px,color:#3B0764
+    classDef decide fill:#CCFBF1,stroke:#0F766E,stroke-width:2px,color:#134E4A
 
     class PR intelligence
     class BUILD,B1,B2,B3 build
@@ -524,37 +524,37 @@ This layer defines how the organization documents its products, processes, and a
 This architecture is not a passive repository; it is an active, agent-driven system that enforces Principle \#7 (*Documentation must live in the repository*) and Principle \#8 (*Knowledge must be explicit*). [2, 2]
 
 ```mermaid
-%%{init: {"theme":"base", "themeVariables": {"lineColor":"#94a3b8","primaryBorderColor":"#94a3b8","textColor":"#64748b"}}}%%
-graph TD  
-    subgraph Repo  
-        direction LR  
-        DOCS["/docs folder"]  
-        ADRS["/docs/adr"]  
+%%{init: {"theme":"base", "themeVariables": {"lineColor":"#64748B","primaryBorderColor":"#64748B","textColor":"#1E293B","background":"#FFFFFF"}}}%%
+graph TD
+    subgraph Repo
+        direction LR
+        DOCS["/docs folder"]
+        ADRS["/docs/adr"]
     end
 
-    subgraph Process  
-        direction TB  
-        PR --> GHA(GitHub Action on: pull_request);  
-        GHA --> DocAgent(DocAgent);  
-        DocAgent --> DIFF(Analyzes Code Diff);  
-        DIFF --> COMMIT(Commits Doc Updates <br/> to same PR branch);  
-        COMMIT --> PR;  
+    subgraph Process
+        direction TB
+        PR --> GHA(GitHub Action on: pull_request);
+        GHA --> DocAgent(DocAgent);
+        DocAgent --> DIFF(Analyzes Code Diff);
+        DIFF --> COMMIT(Commits Doc Updates <br/> to same PR branch);
+        COMMIT --> PR;
     end
 
-    subgraph Review  
-        direction TB  
-        Human  
-        Human --> ReviewCode(Reviews Code);  
-        Human --> ReviewDocs(Reviews Docs... Together);  
-        ReviewCode & ReviewDocs --> Merge(Merge PR);  
+    subgraph Review
+        direction TB
+        Human
+        Human --> ReviewCode(Reviews Code);
+        Human --> ReviewDocs(Reviews Docs... Together);
+        ReviewCode & ReviewDocs --> Merge(Merge PR);
     end
 
-    Repo --> GHA;  
+    Repo --> GHA;
     PR --> Human;
 
-    classDef knowledge fill:#26a69a,stroke:#00796b,stroke-width:3px,color:#000000
-    classDef process fill:#ab47bc,stroke:#7b1fa2,stroke-width:2px,color:#ffffff
-    classDef review fill:#42a5f5,stroke:#1976d2,stroke-width:2px,color:#000000
+    classDef knowledge fill:#E9D5FF,stroke:#7C3AED,stroke-width:3px,color:#3B0764
+    classDef process fill:#E0F2FE,stroke:#0369A1,stroke-width:2px,color:#0C4A6E
+    classDef review fill:#DBEAFE,stroke:#1D4ED8,stroke-width:2px,color:#1E3A8A
 
     class Repo,DOCS,ADRS knowledge
     class Process,PR,GHA,DocAgent,DIFF,COMMIT process
