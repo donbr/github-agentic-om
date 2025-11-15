@@ -1,0 +1,7 @@
+[project]
+name = "github-agentic-om"
+version = "0.1.0"
+description = "GitHub-Native Agentic Operating Model - A framework for managing blended human-AI engineering teams"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = []
