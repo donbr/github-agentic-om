@@ -19,7 +19,7 @@ Preferred patterns:
     docs/<topic>
 
 Example workflow:
-    git checkout -b feature/<short-tag>-<description>
+    git switch -c feature/<short-tag>-<description>
 
 ## Commits
 - Small, focused commits.
