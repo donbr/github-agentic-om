@@ -20,6 +20,44 @@ This repository documents "The GitHub-Native Agentic Operating Model" - a framew
 - **Version**: v2.0.0 - Comprehensive operating model with phased adoption guidance
 - **README Structure**: Features "Getting Started" section separating implementation guidance (adoption materials) from deep understanding (operating model)
 
+## Quick Start Commands
+
+Essential commands for working with Claude Code in this repository:
+
+### Context Management
+- `/init` - Generate or regenerate CLAUDE.md based on codebase scan
+- `#<instruction>` - Add quick memory/rule (e.g., `#use modern git commands like git switch`)
+- `/clear` - Clear current conversation history
+- `/compact` - Summarize conversation history to save context
+- `ESC` - Interrupt Claude to redirect or correct
+- `ESC ESC` - Rewind conversation to earlier point
+- `@<file>` - Reference specific files in prompts (e.g., `@docs/adoption-playbook.md`)
+
+### MCP Server Management
+- `/mcp` - View connected MCP servers and available tools
+- Check `.mcp.json` for configured MCP servers (time, sequential-thinking, Context7, ai-docs-server, playwright)
+
+### Mode Switching
+- `Shift + Tab` - Toggle between planning mode and auto-accept mode
+- Planning mode: Review changes before execution (recommended for this repo)
+- Auto-accept mode: Faster iteration, use with caution
+
+### Bash Integration
+- `!<command>` - Run bash command through Claude Code (e.g., `!git status`)
+- Prefer using dedicated tools (Read, Edit, Write) over bash for file operations
+
+### Extended Thinking Mode
+For complex tasks requiring deeper analysis, use graduated thinking levels:
+- `think` - Standard complexity (architectural decisions, multi-file changes)
+- `think hard` - High ambiguity (new feature design, refactoring strategies)
+- `think harder` - Complex architectural changes
+- `ultrathink` - System-level refactoring or critical decisions
+
+**Alignment with Operating Model**: Maps to Risk & Ambiguity Routing Matrix (Part VI)
+- Low risk, low ambiguity: Standard mode
+- Low risk, high ambiguity: `think` mode
+- High risk, high ambiguity: `think hard` or `think harder`
+
 ## Development Workflow
 
 This repository practices what it preaches - it follows the trunk-based, PR-first workflow documented in the whitepaper.
@@ -81,7 +119,7 @@ If you detect the current branch is `main`:
 - **Avoid making edits** unless the change is trivial AND user explicitly insists
 - For non-trivial work, guide user to create a feature branch first:
   ```
-  git checkout -b feature/<short-tag>-<description>
+  git switch -c feature/<short-tag>-<description>
   ```
 - Before any commit, encourage inspection commands:
   - `git status` - See what's staged
@@ -93,6 +131,29 @@ If you detect the current branch is `main`:
 - **Never suggest force pushes** unless explicitly requested by user
 - Encourage reviewing changes before committing
 - Verify changes align with PR scope
+
+### Testing & Quality Commands
+
+This repository emphasizes test-driven development aligned with the BMAD Loop (Part VIII):
+
+**Test-Driven Debugging Pattern:**
+```
+When encountering an error:
+1. Write tests to evaluate the failing component
+2. Write tests for related components
+3. Run tests to identify specific failures
+4. Propose fixes based on test evidence
+
+Use "think" mode for complex debugging.
+```
+
+**Documentation Testing:**
+- Verify all markdown files render correctly
+- Check all internal links resolve properly
+- Ensure mermaid diagrams compile
+- Validate code examples in documentation
+
+**Reference:** See [docs/tooling/testing-with-claude-code.md](docs/tooling/testing-with-claude-code.md) for comprehensive testing workflows
 
 ## AI Agent Behavior
 
@@ -209,3 +270,54 @@ See CONTRIBUTING.md for:
 - Citation management
 - Mermaid diagram guidelines
 - Code of conduct
+
+---
+
+# important-instruction-reminders
+
+**Critical Constraints - Read Every Time:**
+
+## Git Commands
+- ✅ **ALWAYS** use `git switch -c <branch>` to create branches
+- ❌ **NEVER** use `git checkout -b <branch>` (legacy syntax, deprecated)
+- ❌ **NEVER** commit directly to `main` branch
+- ❌ **NEVER** suggest `git push --force` unless explicitly requested
+- ✅ **ALWAYS** create feature branch for non-trivial work: `git switch -c docs/<topic>`
+
+## Branch Workflow
+- ✅ **ALWAYS** check current branch before making changes (`git status`)
+- ✅ **ALWAYS** follow naming convention: `feature/`, `bugfix/`, `refactor/`, `docs/`
+- ✅ **ALWAYS** delete branches after PR merge
+- ❌ **NEVER** make sweeping multi-file changes without explicit user request
+
+## Pull Requests
+- ✅ **ALWAYS** use PR template structure (Summary, Context, Implementation, Testing, Risks)
+- ✅ **ALWAYS** explain which files will change and why
+- ✅ **ALWAYS** suggest validation steps
+- ✅ **ALWAYS** keep PRs small and focused
+
+## Documentation
+- ✅ **ALWAYS** maintain 13-part structure in operating model (Parts I-XIII)
+- ✅ **ALWAYS** use superscript citations (¹, ²) linking to Part XIII
+- ✅ **ALWAYS** preserve mermaid diagram syntax
+- ✅ **ALWAYS** check internal links resolve properly
+- ❌ **NEVER** create new documentation files without explicit request
+
+## AI Agent Behavior
+- ✅ **ALWAYS** align with Eight Governing Principles
+- ✅ **ALWAYS** use "think" mode for complex/ambiguous tasks
+- ✅ **ALWAYS** reference tooling guides for operational details
+- ❌ **NEVER** bypass governance rules for convenience
+- ❌ **NEVER** assume capabilities without checking MCP permissions
+
+## Extended Thinking
+- Use `think` for architectural decisions
+- Use `think hard` for high ambiguity tasks
+- Use `think harder` for complex architectural changes
+- Use `ultrathink` for system-level refactoring
+
+## When Uncertain
+- ✅ **ASK** before making structural changes
+- ✅ **ASK** before creating new files
+- ✅ **ASK** before modifying governance documents
+- ✅ **VERIFY** changes align with operating model principles

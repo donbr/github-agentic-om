@@ -38,3 +38,18 @@ Cursor uses `.mdc` rule files under `.cursor/rules/` to influence LLM behavior.
 
 The `.mdc` files themselves are the source of truth for enforcement behavior.
 This document exists to explain how they relate back to the branching standard.
+
+---
+
+## Additional Tooling Resources
+
+For comprehensive guides on using Claude Code and implementing the GitHub-Native Operating Model workflows:
+
+- **[Claude Code Quick Start](claude-code-quickstart.md)** - Essential commands and workflows for Claude Code
+- **[Git Worktrees Practical Guide](git-worktrees-practical-guide.md)** - Parallel agent development with worktrees
+- **[MCP Server Workflow](mcp-server-workflow.md)** - Requesting, testing, and deploying MCP servers
+- **[Testing with Claude Code](testing-with-claude-code.md)** - TDD, debugging, and BMAD Loop integration
+- **[Custom Commands Library](custom-commands-library.md)** - Reusable slash commands for common workflows
+- **[Git Commands Reference](git-commands-reference.md)** - Modern git syntax and best practices
+
+These guides provide practical implementation details for the theoretical framework defined in the [GitHub-Native Operating Model](../github-native-operating-model.md).

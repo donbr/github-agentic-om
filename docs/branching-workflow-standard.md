@@ -149,7 +149,7 @@ GitHub recommends clear naming so PRs and discussions are easily linked to Issue
 ### 1. Create a branch
 
 ```bash
-git checkout -b feature/123-improve-auth
+git switch -c feature/123-improve-auth
 ```
 
 ### 2. Commit small, incremental changes
@@ -238,6 +238,66 @@ flowchart TD
     T --> R[Human + AI Review]
     R --> M
 ```
+
+---
+
+## 11. References & Further Reading
+
+This section provides authoritative sources for the practices documented in this workflow standard. These references are valuable for both human learners and AI tools seeking to understand modern git and GitHub best practices.
+
+### Git Command Documentation
+
+**Official Git Switch Documentation**
+https://git-scm.com/docs/git-switch
+The official Git documentation for the `git switch` command, introduced in Git 2.23 (August 2019). Explains the rationale for splitting `git checkout` functionality into specialized commands (`git switch` for branches, `git restore` for files) to reduce confusion and improve clarity.
+
+**Git Switch vs Git Checkout Comparison**
+https://stackoverflow.com/questions/57265785/whats-the-difference-between-git-switch-and-git-checkout-branch
+Authoritative community explanation of when each command was introduced and current best practices. Key takeaway: Use `git switch` for branch operations in modern workflows (Git 2.23+).
+
+### GitHub Workflow Documentation
+
+**GitHub Flow**
+https://docs.github.com/en/get-started/using-github/github-flow
+Official GitHub documentation describing the lightweight, branch-based workflow that underpins this standard. Covers the six-step process: create branch, make changes, create PR, address reviews, merge, delete branch.
+
+**About Protected Branches**
+https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches
+Official GitHub documentation on branch protection rules. Explains how to enforce PR requirements, status checks, review approvals, and prevent force pushes - critical for maintaining `main` as an always-deployable trunk.
+
+**About Merge Methods on GitHub**
+https://docs.github.com/articles/about-merge-methods-on-github
+Official GitHub documentation comparing squash merge, rebase merge, and merge commit strategies. Explains the tradeoffs between clean history (squash), linear history (rebase), and full preservation (merge commit).
+
+### Trunk-Based Development
+
+**Trunk-Based Development**
+https://trunkbaseddevelopment.com/
+The primary reference site for trunk-based development methodology. Explains the practice of collaborating on code in a single branch ("trunk" or "main"), short-lived feature branches, and the relationship to Continuous Integration. Widely cited as the authoritative source for this development model.
+
+**Trunk-Based Development vs GitHub Flow**
+https://trunkbaseddevelopment.com/
+The trunk-based development site notes that GitHub Flow practitioners will find the approaches "quite similar" with one key difference around release strategies. Both emphasize short-lived branches, frequent integration, and PR-based review.
+
+### Modern Git Best Practices (2025)
+
+**Git Best Practices for Modern Workflows**
+Summary of current best practices based on Git 2.23+ and GitHub's documented workflows:
+- Use `git switch -c <branch>` instead of `git checkout -b <branch>` for creating branches
+- Use `git restore` instead of `git checkout -- <file>` for restoring files
+- Prefer squash or rebase merge for cleaner history
+- Keep branches short-lived (hours to days, not weeks)
+- Use descriptive branch names following patterns like `feature/<id>-<description>`
+- Delete branches immediately after merge
+- Protect `main` with branch protection rules and required status checks
+
+### Additional Context
+
+**Git Version Requirements**
+The `git switch` command requires Git 2.23 or later (released August 2019). Organizations still using older Git versions should upgrade to access modern command syntax and improved user experience.
+
+**Why Git Split Checkout Functionality**
+Git's decision to introduce `git switch` and `git restore` addressed a fundamental usability problem: `git checkout` performed too many unrelated functions (switching branches, checking out files, detaching HEAD), creating confusion especially for new users. The split makes each command's purpose explicit and reduces errors.
 
 ---
 
