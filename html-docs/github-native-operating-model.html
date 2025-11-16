@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The GitHub-Native Agentic Operating Model</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        
+        .content-section {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        .content-section.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .nav-link {
+            @apply px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-200 hover:text-gray-900 transition-all;
+        }
+        .nav-link.active {
+            @apply bg-blue-600 text-white hover:bg-blue-700 hover:text-white;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+
+        .flow-box {
+            @apply bg-white p-4 rounded-lg shadow-md border border-gray-200 text-center transition-all hover:shadow-lg hover:border-blue-500 cursor-pointer;
+        }
+        .flow-arrow {
+            @apply text-2xl font-bold text-blue-500 mx-2 hidden md:block;
+        }
+        .flow-arrow-down {
+            @apply text-2xl font-bold text-blue-500 my-2 text-center;
+        }
+        .step-item {
+            @apply relative pl-8 pb-6 border-l-2 border-blue-500;
+        }
+        .step-item:last-child {
+            @apply border-l-0 pb-0;
+        }
+        .step-dot {
+            @apply absolute -left-[10px] top-1 w-5 h-5 bg-blue-600 rounded-full border-4 border-white;
+        }
+        .accordion-header {
+            @apply flex justify-between items-center w-full px-5 py-4 text-left bg-white hover:bg-gray-50 rounded-lg shadow cursor-pointer transition-all;
+        }
+        .accordion-content {
+            @apply px-5 py-4 mt-2 bg-white rounded-lg shadow overflow-hidden;
+        }
+        .accordion-icon {
+            @apply w-5 h-5 transition-transform duration-300;
+        }
+        .accordion-header.open .accordion-icon {
+            @apply rotate-180;
+        }
+    </style>
+    <!-- Chosen Palette: Warm Neutral & Blue -->
+    <!-- Application Structure Plan: Deconstructed the linear report into a thematic SPA with a top navigation bar. The sections (Overview, Architecture, Layers, Playbooks) are 'tabs' that show/hide content, preventing a long scroll. A central 'Core Architecture' page features an HTML-based, clickable flowchart that acts as a visual navigation hub, allowing users to jump directly to the conceptual layer they want to explore (Org, Plan, Spec, etc.). This 'systems-thinking' structure was chosen because the report describes a complex, interconnected system, and a linear page would fail to capture these relationships. This design prioritizes user-driven exploration over passive reading. -->
+    <!-- Visualization & Content Choices: [Report Info: Main Architecture Flowchart] -> [Goal: Provide system overview & navigation] -> [Viz: Clickable 6-box flowchart built with HTML/Tailwind divs and flexbox] -> [Interaction: onClick navigates to the corresponding content section] -> [Justification: Replaces static/forbidden diagram with a functional, interactive navigation hub.] -> [Library/Method: HTML/JS]. [Report Info: Blended Teams (Part IV)] -> [Goal: Visualize the mix of human/AI roles] -> [Viz: Horizontal Bar Chart] -> [Interaction: Tooltip on hover] -> [Justification: Illustrates the "blended workforce" concept with sample data, fulfilling the chart requirement.] -> [Library/Method: Chart.js]. [Report Info: Risk/RBAC Matrices (Tables)] -> [Goal: Compare data] -> [Viz: Styled HTML Table] -> [Interaction: Read] -> [Justification: Correct format for tabular data.] -> [Library/Method: HTML/Tailwind]. [Report Info: BMAD Loop Flowchart] -> [Goal: Explain the 4-stage CI/CD loop] -> [Viz: 2x2 interactive grid] -> [Interaction: onClick a stage (e.g., 'BUILD') to expand/show its details] -> [Justification: Makes a static process diagram interactive and engaging.] -> [Library/Method: HTML/JS]. [Report Info: Playbooks (List)] -> [Goal: Present narrative examples] -> [Viz: HTML/Tailwind Accordion] -> [Interaction: onClick to expand/collapse] -> [Justification: Manages content density, hiding complex info until requested.] -> [Library/Method: HTML/JS]. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+</head>
+<body class="bg-stone-100 text-gray-800">
+
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold text-blue-600">Agentic Operating Model</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div id="nav-links" class="ml-10 flex items-center space-x-4">
+                        <button class="nav-link active" data-section="overview">Overview</button>
+                        <button class="nav-link" data-section="principles">Principles</button>
+                        <button class="nav-link" data-section="architecture">Core Architecture</button>
+                        <button class="nav-link" data-section="organization">Organization</button>
+                        <button class="nav-link" data-section="planning">Planning</button>
+                        <button class="nav-link" data-section="specification">Specification</button>
+                        <button class="nav-link" data-section="execution">Execution</button>
+                        <button class="nav-link" data-section="bmad">CI/CD (BMAD)</button>
+                        <button class="nav-link" data-section="knowledge">Knowledge</button>
+                        <button class="nav-link" data-section="playbooks">Playbooks</button>
+                        <button class="nav-link" data-section="governance">Governance</button>
+                    </div>
+                </div>
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <!-- Icon when menu is closed. -->
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                        <!-- Icon when menu is open. -->
+                        <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Mobile menu, show/hide based on menu state. -->
+            <div id="mobile-menu" class="md:hidden hidden absolute left-0 right-0 bg-white shadow-lg border-t border-gray-100">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <button class="mobile-nav-link block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900" data-section="overview">Overview</button>
+                    <button class="mobile-nav-link block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900" data-section="principles">Principles</button>
+                    <button class="mobile-nav-link block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900" data-section="architecture">Core Architecture</button>
+                    <button class="mobile-nav-link block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900" data-section="organization">Organization</button>
+                    <button class="mobile-nav-link block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900" data-section="planning">Planning</button>
+                    <button class="mobile-nav-link block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900" data-section="specification">Specification</button>
+                    <button class="mobile-nav-link block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900" data-section="execution">Execution</button>
+                    <button class="mobile-nav-link block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900" data-section="bmad">CI/CD (BMAD)</button>
+                    <button class="mobile-nav-link block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900" data-section="knowledge">Knowledge</button>
+                    <button class="mobile-nav-link block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900" data-section="playbooks">Playbooks</button>
+                    <button class="mobile-nav-link block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900" data-section="governance">Governance</button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Breadcrumb Navigation -->
+    <div id="breadcrumb-container" class="bg-white border-b border-gray-200">
+        <nav aria-label="Breadcrumb" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+            <ol class="flex items-center space-x-2 text-sm">
+                <li>
+                    <button data-section="overview" class="breadcrumb-link text-blue-600 hover:text-blue-800 font-medium">
+                        Home
+                    </button>
+                </li>
+                <li id="breadcrumb-current-container" class="hidden">
+                    <div class="flex items-center">
+                        <svg class="h-5 w-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                        </svg>
+                        <span id="breadcrumb-current" class="ml-2 text-gray-700 font-medium"></span>
+                    </div>
+                </li>
+            </ol>
+        </nav>
+    </div>
+
+    <main id="content-container" class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+
+        <section id="overview-content" class="content-section active">
+            <h2 class="text-3xl font-bold tracking-tight text-gray-900 mb-4">Executive Overview</h2>
+            <div class="space-y-4 p-6 bg-white rounded-lg shadow">
+                <p class="text-lg text-gray-700">The transition to AI-driven software engineering demands a paradigm shift. The prevailing ad-hoc methods—unstructured "vibe coding" and un-governed agentic workflows—are creating a new, significant generation of technical debt. This debt manifests as brittle, non-auditable, and misaligned code.</p>
+                <p class="text-gray-600">The industry requires a repeatable, robust, and spec-driven system that aligns both human and AI agents on *what* to build and *why* before a single line of code is written.</p>
+                <p class="text-gray-600">This model transforms GitHub into the unified coordination and governance plane for a blended human–AI engineering workforce. It embeds specification discipline, agent governance, CI/CD intelligence, and documentation rigor directly into the development lifecycle. The result is an auditable, scalable operating model that aligns all contributors — human and autonomous — around the same artifacts, the same rules, and the same source of truth.</p>
+                <p class="text-gray-600">The primary challenge of leveraging agentic AI is not capability, but governance, safety, and auditability. This framework's core principle is that *governance must be embedded into the SDLC itself*, not implemented as a separate, external platform.</p>
+            </div>
+        </section>
+
+        <section id="principles-content" class="content-section">
+            <h2 class="text-3xl font-bold tracking-tight text-gray-900 mb-4">Guiding Principles</h2>
+            <div class="p-6 bg-white rounded-lg shadow">
+                <p class="text-lg text-gray-700 mb-6">This operating model is founded on eight core principles that serve as the constitutional basis for all subsequent technical and procedural decisions. These principles must be explicit to ensure all contributors, human and AI, operate from a shared understanding.</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                        <h3 class="font-semibold text-blue-600"><span class="text-2xl mr-2">1.</span> Every contribution is a Pull Request.</h3>
+                        <p class="text-sm text-gray-600 pl-6">No privilege escalation, no bypass routes.</p>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                        <h3 class="font-semibold text-blue-600"><span class="text-2xl mr-2">2.</span> Governance must be inside the SDLC.</h3>
+                        <p class="text-sm text-gray-600 pl-6">GitHub RBAC, branch protections, and PR review form the safety perimeter.</p>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                        <h3 class="font-semibold text-blue-600"><span class="text-2xl mr-2">3.</span> Specification is the contract.</h3>
+                        <p class="text-sm text-gray-600 pl-6">All work must begin with an approved spec and plan.</p>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                        <h3 class="font-semibold text-blue-600"><span class="text-2xl mr-2">4.</span> Ambiguity requires human judgment.</h3>
+                        <p class="text-sm text-gray-600 pl-6">AI agents act autonomously only under low ambiguity and low risk.</p>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                        <h3 class="font-semibold text-blue-600"><span class="text-2xl mr-2">5.</span> Agents must be modular, audited, and version-controlled.</h3>
+                        <p class="text-sm text-gray-600 pl-6">Their primitives, instructions, and MCP capabilities must be in source control.</p>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                        <h3 class="font-semibold text-blue-600"><span class="text-2xl mr-2">6.</span> CI/CD is a decision engine.</h3>
+                        <p class="text-sm text-gray-600 pl-6">Build → Measure → Analyze → Decide is the backbone of engineering intelligence.</p>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                        <h3 class="font-semibold text-blue-600"><span class="text-2xl mr-2">7.</span> Documentation must live in the repository.</h3>
+                        <p class="text-sm text-gray-600 pl-6">PR-driven doc updates prevent drift and improve discoverability.</p>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                        <h3 class="font-semibold text-blue-600"><span class="text-2xl mr-2">8.</span> Knowledge must be explicit.</h3>
+                        <p class="text-sm text-gray-600 pl-6">ADRs preserve the *why* behind the *what*.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="architecture-content" class="content-section">
+            <h2 class="text-3xl font-bold tracking-tight text-gray-900 mb-4">Core Architecture</h2>
+            <div class="p-6 bg-white rounded-lg shadow">
+                <p class="text-lg text-gray-700 mb-6">This system is a layered architecture where each part builds upon the last, from organizational setup to continuous improvement. The entire process is supported by a living knowledge base. Click any layer to explore it in detail.</p>
+                
+                <div class="flex flex-col items-center">
+                    <button class="flow-box w-full md:w-3/4 lg:w-1/2 mb-2" data-section="organization">
+                        <h3 class="text-lg font-semibold">🏛️ Part IV — Organizational</h3>
+                        <p class="text-sm text-gray-600">GitHub org structure, RBAC, MCP registry</p>
+                    </button>
+                    <div class="flow-arrow-down">↓</div>
+                    <button class="flow-box w-full md:w-3/4 lg:w-1/2 mb-2" data-section="planning">
+                        <h3 class="text-lg font-semibold">📋 Part V — Strategic Planning</h3>
+                        <p class="text-sm text-gray-600">GitHub Projects as Program Board</p>
+                    </button>
+                    <div class="flow-arrow-down">↓</div>
+                    <button class="flow-box w-full md:w-3/4 lg:w-1/2 mb-2" data-section="specification">
+                        <h3 class="text-lg font-semibold">📝 Part VI — Specification</h3>
+                        <p class="text-sm text-gray-600">Spec Kit: constitution → spec → plan → tasks</p>
+                    </button>
+                    <div class="flow-arrow-down">↓</div>
+                    <button class="flow-box w-full md:w-3/4 lg:w-1/2 mb-2" data-section="execution">
+                        <h3 class="text-lg font-semibold">⚙️ Part VII — Execution</h3>
+                        <p class="text-sm text-gray-600">Agents, git worktrees, Pull Requests</p>
+                    </button>
+                    <div class="flow-arrow-down">↓</div>
+                    <button class="flow-box w-full md:w-3/4 lg:w-1/2 mb-2" data-section="bmad">
+                        <h3 class="text-lg font-semibold">🔄 Part VIII — BMAD Loop</h3>
+                        <p class="text-sm text-gray-600">CI/CD as intelligence engine</p>
+                    </button>
+                    <div class="text-center my-4 w-full">
+                        <span class="inline-block border-l-2 border-r-2 border-dashed border-blue-400 h-12 w-0 md:h-0 md:w-2/5 md:border-t-2 md:border-b-2"></span>
+                        <span class="mx-4 text-gray-600 font-medium">Supported By</span>
+                        <span class="inline-block border-l-2 border-r-2 border-dashed border-blue-400 h-12 w-0 md:h-0 md:w-2/5 md:border-t-2 md:border-b-2"></span>
+                    </div>
+                    <button class="flow-box w-full md:w-3/4 lg:w-1/2" data-section="knowledge">
+                        <h3 class="text-lg font-semibold">📚 Part IX — Knowledge</h3>
+                        <p class="text-sm text-gray-600">Documentation & ADRs in repo</p>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section id="organization-content" class="content-section">
+            <h2 class="text-3xl font-bold tracking-tight text-gray-900 mb-4">🏛️ Organizational Operating Model</h2>
+            <div class="space-y-6">
+                <div class="p-6 bg-white rounded-lg shadow">
+                    <p class="text-lg text-gray-700 mb-6">This layer defines the foundational "chassis" of the organization, establishing the security, permissions, and governance model necessary to segregate human and AI agent responsibilities. This is the direct implementation of Principle #2: *Governance must be inside the SDLC*.</p>
+                </div>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="p-6 bg-white rounded-lg shadow">
+                        <h3 class="text-xl font-semibold mb-4 text-blue-600">Blended Teams & Structure</h3>
+                        <p class="text-gray-600 mb-4">Access is managed via GitHub Teams, creating clear, role-based boundaries for the "blended workforce" of human and AI contributors.</p>
+                        <ul class="list-disc list-inside space-y-2">
+                            <li><strong class="text-gray-800">team.org.owners:</strong> Minimal human team (at least two) with "Owner" role.</li>
+                            <li><strong class="text-gray-800">team.human.seniors:</strong> Human technical leads, architects, and principal engineers.</li>
+                            <li><strong class="text-gray-800">team.human.enginers:</strong> All human software developers.</li>
+                            <li><strong class="text-gray-800">team.ai.developers:</strong> Machine user accounts for AI agents that *write code*.</li>
+                            <li><strong class="text-gray-800">team.ai.evaluators:</strong> Machine user accounts for AI agents that *analyze and report*.</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="p-6 bg-white rounded-lg shadow">
+                        <h3 class="text-xl font-semibold mb-4 text-blue-600">Illustrative Team Composition</h3>
+                        <p class="text-gray-600 mb-4">This chart shows an example of how a blended team might be structured, highlighting the mix of human and AI contributors.</p>
+                        <div class="chart-container">
+                            <canvas id="teamChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-6 bg-white rounded-lg shadow">
+                    <h3 class="text-xl font-semibold mb-4 text-blue-600">Role-Based Access Control (RBAC) Matrix</h3>
+                    <p class="text-gray-600 mb-4">The primary safety mechanism is the strict application of the principle of least privilege. AI agents must never be granted "Owner" or "Admin" roles. This matrix defines the precise permissions.</p>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Team</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Org Role</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Repo Role</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Key Permissions & Rationale</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">team.org.owners</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Owner</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Admin</td>
+                                    <td class="px-6 py-4 text-sm text-gray-500">Human-only. Full administrative access.</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">team.human.seniors</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Member</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Maintain</td>
+                                    <td class="px-6 py-4 text-sm text-gray-500">Human-only. Can merge PRs to protected branches.</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">team.human.engineers</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Member</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Write</td>
+                                    <td class="px-6 py-4 text-sm text-gray-500">Standard developer. Can open PRs.</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">team.ai.developers</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Member</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Write</td>
+                                    <td class="px-6 py-4 text-sm text-gray-500">AI agent. Can open PRs. *Cannot merge*.</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">team.ai.evaluators</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Member</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Read</td>
+                                    <td class="px-6 py-4 text-sm text-gray-500">AI agent. Can read code for analysis. Cannot push.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="p-6 bg-white rounded-lg shadow">
+                    <h3 class="text-xl font-semibold mb-4 text-blue-600">GitHub as the Factory Floor</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="bg-gray-50 p-4 rounded-lg border">
+                            <h4 class="font-semibold">Value Stream Alignment</h4>
+                            <p class="text-sm text-gray-600">Each repository (e.g., product-api) is treated as a distinct "value stream" to isolate concerns.</p>
+                        </div>
+                        <div class="bg-gray-50 p-4 rounded-lg border">
+                            <h4 class="font-semibold">Artifact Registry (ghcr.io)</h4>
+                            <p class="text-sm text-gray-600">GitHub Packages serves as the unified "supply chain" for all buildable artifacts (agents, microservices).</p>
+                        </div>
+                        <div class="bg-gray-50 p-4 rounded-lg border">
+                            <h4 class="font-semibold">Internal MCP Registry</h4>
+                            <p class="text-sm text-gray-600">A private, human-approved "allow list" for AI agent capabilities (tools). This is the runtime governance plane.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="planning-content" class="content-section">
+            <h2 class="text-3xl font-bold tracking-tight text-gray-900 mb-4">📋 Strategic Planning Layer</h2>
+            <div class="space-y-6">
+                <div class="p-6 bg-white rounded-lg shadow">
+                    <p class="text-lg text-gray-700 mb-6">This layer defines the "what" and "when" of development, configuring GitHub Projects to function as a cross-repository Program Increment (PI) board. This provides a single-pane-of-glass view for planning.</p>
+                </div>
+
+                <div class="p-6 bg-white rounded-lg shadow">
+                    <h3 class="text-xl font-semibold mb-4 text-blue-600">Work Item Hierarchy & Flow</h3>
+                    <p class="text-gray-600 mb-6">A SAFE-like structure is emulated using custom fields and linking to provide a hierarchy for planning and automated dispatch for AI-assigned tasks.</p>
+                    
+                    <div class="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0 md:space-x-4">
+                        <div class="flow-box w-full md:w-1/3">
+                            <h4 class="font-semibold text-lg">📥 1. Work Intake</h4>
+                            <ul class="list-disc list-inside text-sm text-left mt-2">
+                                <li>New Issue created</li>
+                                <li>Structured YAML Issue Form</li>
+                            </ul>
+                        </div>
+                        <div class="flow-arrow hidden md:block">→</div>
+                        <div class="flow-arrow-down md:hidden">↓</div>
+                        <div class="flow-box w-full md:w-1/3">
+                            <h4 class="font-semibold text-lg">📊 2. GitHub Projects Board</h4>
+                            <ul class="list-disc list-inside text-sm text-left mt-2">
+                                <li>Epics (Strategic)</li>
+                                <li>Features</li>
+                                <li>Stories</li>
+                                <li>Tasks (Tactical)</li>
+                            </ul>
+                        </div>
+                        <div class="flow-arrow hidden md:block">→</div>
+                        <div class="flow-arrow-down md:hidden">↓</div>
+                        <div class="flow-box w-full md:w-1/3">
+                            <h4 class="font-semibold text-lg">🤖 3. AI Dispatch System</h4>
+                            <ul class="list-disc list-inside text-sm text-left mt-2">
+                                <li>Auto-Triage (Action)</li>
+                                <li>AI Backlog (Column)</li>
+                                <li>Agent Dispatcher</li>
+                                <li>Assign to AI Agent</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="specification-content" class="content-section">
+            <h2 class="text-3xl font-bold tracking-tight text-gray-900 mb-4">📝 Specification Layer (Spec Kit)</h2>
+            <div class="space-y-6">
+                <div class="p-6 bg-white rounded-lg shadow">
+                    <p class="text-lg text-gray-700 mb-6">This is the "intake engine" for the factory floor, formalizing human intent into structured, machine-readable specifications that govern all AI execution. This is the embodiment of Principle #3: *Specification is the contract*.</p>
+                </div>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="p-6 bg-white rounded-lg shadow">
+                        <h3 class="text-xl font-semibold mb-4 text-blue-600">The Spec Kit Flow</h3>
+                        <p class="text-gray-600 mb-6">The flow from idea to implementation is a collaborative, auditable process governed by specific artifacts.</p>
+                        <div class="step-item">
+                            <div class="step-dot"></div>
+                            <h4 class="font-semibold">1. Constitution (Human)</h4>
+                            <p class="text-sm text-gray-600">Architect defines `constitution.md` (tech stack, standards).</p>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-dot"></div>
+                            <h4 class="font-semibold">2. Specify (Human)</h4>
+                            <p class="text-sm text-gray-600">PM/Architect defines "what" & "why" in `spec.md`.</p>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-dot"></div>
+                            <h4 class="font-semibold">3. Plan (AI Agent)</h4>
+                            <p class="text-sm text-gray-600">Agent generates "how" in `plan.md`. → <strong class="text-red-600">HALT</strong></p>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-dot bg-red-600"></div>
+                            <h4 class="font-semibold text-red-600">4. Human Review Gate</h4>
+                            <p class="text-sm text-gray-600">Human architect MUST review and approve the `plan.md`.</p>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-dot"></div>
+                            <h4 class="font-semibold">5. Tasks (AI Agent)</h4>
+                            <p class="text-sm text-gray-600">Agent decomposes plan into `tasks.md` checklist.</p>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-dot"></div>
+                            <h4 class="font-semibold">6. Implement (AI Agent)</h4>
+                            <p class="text-sm text-gray-600">Agent executes tasks and opens a PR for human review.</p>
+                        </div>
+                    </div>
+
+                    <div class="p-6 bg-white rounded-lg shadow">
+                        <h3 class="text-xl font-semibold mb-4 text-blue-600">Risk & Ambiguity Routing Matrix</h3>
+                        <p class="text-gray-600 mb-4">This matrix is the "brain" of the model, defining the workflow and human-in-the-loop (HITL) checkpoints for any task. It implements Principle #4: *Ambiguity requires human judgment*.</p>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Task Type</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Risk / Ambiguity</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Workflow</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Human Checkpoint</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                    <tr>
+                                        <td class="px-4 py-4 text-sm font-medium">Well-Defined Refactor</td>
+                                        <td class="px-4 py-4 text-sm text-gray-500">Low / Low</td>
+                                        <td class="px-4 py-4 text-sm text-gray-500">Autonomous</td>
+                                        <td class="px-4 py-4 text-sm text-gray-500">Auto-merge on pass.</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-4 py-4 text-sm font-medium">New Greenfield Feature</td>
+                                        <td class="px-4 py-4 text-sm text-gray-500">Low / High</td>
+                                        <td class="px-4 py-4 text-sm text-gray-500">Supervised Plan</td>
+                                        <td class="px-4 py-4 text-sm text-red-600 font-semibold">Mandatory Plan Review</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-4 py-4 text-sm font-medium">Security/Auth Change</td>
+                                        <td class="px-4 py-4 text-sm text-gray-500">High / Low</td>
+                                        <td class="px-4 py-4 text-sm text-gray-500">Supervised Implement</td>
+                                        <td class="px-4 py-4 text-sm text-red-600 font-semibold">Mandatory PR Review</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-4 py-4 text-sm font-medium">Production Bug Fix</td>
+                                        <td class="px-4 py-4 text-sm text-gray-500">High / High</td>
+                                        <td class="px-4 py-4 text-sm text-gray-500">Human-Only</td>
+                                        <td class="px-4 py-4 text-sm text-red-600 font-semibold">Mandatory Human Intervention</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <h3 class="text-xl font-semibold mt-6 mb-4 text-blue-600">The "Spec-to-Work-Item" Bridge</h3>
+                        <p class="text-gray-600">A custom GitHub Action (`sync-tasks-to-projects.yml`) automatically parses `tasks.md` and creates corresponding, linked Issues in the GitHub Project board. This automation is the lynchpin of organizational transparency, creating an auditable chain: <strong class="text-gray-900">Spec → Task → Work Item → Code → Review</strong>.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="execution-content" class="content-section">
+            <h2 class="text-3xl font-bold tracking-tight text-gray-900 mb-4">⚙️ Agentic Execution Layer</h2>
+            <div class="space-y-6">
+                <div class="p-6 bg-white rounded-lg shadow">
+                    <p class="text-lg text-gray-700 mb-6">This layer defines the tactical execution loop for a single work item, detailing the flow from Issue creation to a merged Pull Request. The agentic lifecycle ensures that all AI-generated work is auditable, isolated, and conforms to the approved plan.</p>
+                </div>
+
+                <div class="p-6 bg-white rounded-lg shadow">
+                    <h3 class="text-xl font-semibold mb-4 text-blue-600">Agent Role Taxonomy</h3>
+                    <p class="text-gray-600 mb-6">Agents are specialized by function to promote modularity and assign responsibility. This implements Principle #5.</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <div class="bg-gray-50 p-4 rounded-lg border"><h4 class="font-semibold">💻 DeveloperAgent</h4><p class="text-sm text-gray-600">Primary "coder" for features and bugfixes.</p></div>
+                        <div class="bg-gray-50 p-4 rounded-lg border"><h4 class="font-semibold">♻️ RefactorAgent</h4><p class="text-sm text-gray-600">Specialized in addressing technical debt.</p></div>
+                        <div class="bg-gray-50 p-4 rounded-lg border"><h4 class="font-semibold">🔒 SecurityAgent</h4><p class="text-sm text-gray-600">Monitors for vulnerabilities and generates patches.</p></div>
+                        <div class="bg-gray-50 p-4 rounded-lg border"><h4 class="font-semibold">📊 EvaluatorAgent</h4><p class="text-sm text-gray-600">Lives in CI/CD; runs on PRs to measure quality.</p></div>
+                        <div class="bg-gray-50 p-4 rounded-lg border"><h4 class="font-semibold">🏗️ ArchitectAgent</h4><p class="text-sm text-gray-600">Reviews PRs for "architecture drift" against ADRs.</p></div>
+                        <div class="bg-gray-50 p-4 rounded-lg border"><h4 class="font-semibold">📖 DocAgent</h4><p class="text-sm text-gray-600">Updates /docs based on code changes in a PR.</p></div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="p-6 bg-white rounded-lg shadow">
+                        <h3 class="text-xl font-semibold mb-4 text-blue-600">Agent Workspaces: Git Worktrees</h3>
+                        <p class="text-gray-600 mb-4">To prevent "context confusion" where agents overwrite each other's changes, this model **mandates** the use of `git worktrees`. This creates separate, isolated working directories for parallel, multi-agent development.</p>
+                        <div class="bg-gray-900 text-white p-4 rounded-lg font-mono text-sm">
+                            <p>main-repo/</p>
+                            <p class="pl-4">.git/ (Shared)</p>
+                            <p class="pl-4">main/ (Worktree 1)</p>
+                            <p class="pl-4">...</p>
+                            <p class="text-gray-400 mt-2">../feature-123/ (Worktree 2 - Agent A)</p>
+                            <p class="text-gray-400">../feature-456/ (Worktree 3 - Agent B)</p>
+                            <p class="text-gray-400">../refactor-789/ (Worktree 4 - Agent C)</p>
+                        </div>
+                    </div>
+                    <div class="p-6 bg-white rounded-lg shadow">
+                        <h3 class="text-xl font-semibold mb-4 text-blue-600">Auditable Execution Sequence</h3>
+                        <p class="text-gray-600 mb-6">The agent's workstream is explicit and auditable, starting with a "Plan SHA" for traceability.</p>
+                        <div class="step-item">
+                            <div class="step-dot"></div>
+                            <h4 class="font-semibold">1. Assign & Branch</h4>
+                            <p class="text-sm text-gray-600">Dispatcher assigns Issue #123. Agent creates a new branch and worktree.</p>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-dot"></div>
+                            <h4 class="font-semibold">2. Plan Commit (Auditable)</h4>
+                            <p class="text-sm text-gray-600">Agent's *first* action is to commit the `PLAN.md` file. This is the "Plan SHA".</p>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-dot"></div>
+                            <h4 class="font-semibold">3. Implement</h4>
+                            <p class="text-sm text-gray-600">Agent executes the plan, committing code, tests, and docs.</p>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-dot"></div>
+                            <h4 class="font-semibold">4. Open Pull Request</h4>
+                            <p class="text-sm text-gray-600">Agent opens PR, populating a template with "Fixes #123" and "Plan-SHA: <hash>".</p>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-dot bg-red-600"></div>
+                            <h4 class="font-semibold text-red-600">5. Human Review</h4>
+                            <p class="text-sm text-gray-600">A Senior Developer (human) MUST review and approve the PR.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="bmad-content" class="content-section">
+            <h2 class="text-3xl font-bold tracking-tight text-gray-900 mb-4">🔄 CI/CD as a BMAD Loop</h2>
+            <div class="space-y-6">
+                <div class="p-6 bg-white rounded-lg shadow">
+                    <p class="text-lg text-gray-700 mb-6">This synthesizes the entire system into the dynamic, iterative **BMAD (Build-Measure-Analyze-Decide)** cycle. The CI/CD pipeline is transformed from a simple test runner into a comprehensive intelligence and governance loop, embodying Principle #6: *CI/CD is a decision engine*.</p>
+                    <p class="text-gray-600">Click on any stage to see its details.</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bmad-box-container">
+                        <button class="flow-box w-full bmad-box" data-target="bmad-build">
+                            <h3 class="text-xl font-semibold">1. BUILD</h3>
+                            <p class="text-sm text-gray-600">(on: pull_request)</p>
+                        </button>
+                        <div id="bmad-build-details" class="bmad-details hidden mt-4 p-4 bg-gray-50 rounded-lg border">
+                            <ul class="list-disc list-inside space-y-1">
+                                <li>Compile code</li>
+                                <li>Run unit tests</li>
+                                <li>Build container</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="bmad-box-container">
+                        <button class="flow-box w-full bmad-box" data-target="bmad-measure">
+                            <h3 class="text-xl font-semibold">2. MEASURE</h3>
+                            <p class="text-sm text-gray-600">(needs: build)</p>
+                        </button>
+                        <div id="bmad-measure-details" class="bmad-details hidden mt-4 p-4 bg-gray-50 rounded-lg border">
+                            <p class="font-medium mb-2">EvaluatorAgents produce machine-readable JSON reports:</p>
+                            <ul class="list-disc list-inside space-y-1">
+                                <li>`coverage.json` (Code Coverage)</li>
+                                <li>`rag-eval.json` (RAG Hallucination/Quality)</li>
+                                <li>`contract-test.json` (OpenAPI Spec Drift)</li>
+                                <li>`sast-scan.json` (Security Scan)</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="bmad-box-container">
+                        <button class="flow-box w-full bmad-box" data-target="bmad-analyze">
+                            <h3 class="text-xl font-semibold">3. ANALYZE</h3>
+                            <p class="text-sm text-gray-600">(needs: measure)</p>
+                        </button>
+                        <div id="bmad-analyze-details" class="bmad-details hidden mt-4 p-4 bg-gray-50 rounded-lg border">
+                            <ul class="list-disc list-inside space-y-1">
+                                <li>An AI agent interprets the raw JSON reports.</li>
+                                <li>Prompt: "Summarize these findings: coverage.json shows -5%. rag-eval.json shows fluency 0.3. Go/no-go?"</li>
+                                <li>Output: Posts a human-readable summary as a PR comment, tagging seniors.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="bmad-box-container">
+                        <button class="flow-box w-full bmad-box" data-target="bmad-decide">
+                            <h3 class="text-xl font-semibold">4. DECIDE</h3>
+                            <p class="text-sm text-gray-600">(on: pull_request: closed)</p>
+                        </button>
+                        <div id="bmad-decide-details" class="bmad-details hidden mt-4 p-4 bg-gray-50 rounded-lg border">
+                            <p class="font-medium mb-2">This is the "learning" and "feedback" part of the loop:</p>
+                            <ul class="list-disc list-inside space-y-1">
+                                <li>If Merged: Workflow finds original Issue and closes it on the Project Board.</li>
+                                <li><strong class="text-blue-600">Loop Closure:</strong> Workflow checks Analyze output. If test coverage was low, it *automatically creates a new issue* titled "TECH DEBT: Refactor auth.py for low test coverage."</li>
+                                <li>This new issue is added to the backlog, closing the loop.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="knowledge-content" class="content-section">
+            <h2 class="text-3xl font-bold tracking-tight text-gray-900 mb-4">📚 Knowledge Architecture</h2>
+            <div class="space-y-6">
+                <div class="p-6 bg-white rounded-lg shadow">
+                    <p class="text-lg text-gray-700 mb-6">This layer defines how the organization documents its products, processes, and architectural decisions, ensuring knowledge is co-located with the code and accessible to both humans and AI. This enforces Principle #7 (*Documentation must live in the repository*) and Principle #8 (*Knowledge must be explicit*).</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="p-6 bg-white rounded-lg shadow">
+                        <h3 class="text-xl font-semibold mb-4 text-red-600">The "No Wiki" Mandate</h3>
+                        <p class="text-gray-600 mb-4">The GitHub Wiki feature **must be disabled**. It is an "anti-pattern" in an agentic model because it does not support Pull Requests, violating Principle #1.</p>
+                        <p class="text-gray-600">All documentation—product, architecture, and process—will be stored in a <strong class="text-gray-900">/docs</strong> folder within the main repository. This ensures documentation is versioned, auditable, and can be updated by AI agents via the standard PR flow.</p>
+                    </div>
+                    <div class="p-6 bg-white rounded-lg shadow">
+                        <h3 class="text-xl font-semibold mb-4 text-blue-600">Architecture Decision Records (ADRs)</h3>
+                        <p class="text-gray-600 mb-4">To capture the *why* behind architectural choices, we use ADRs—lightweight markdown documents stored in <strong class="text-gray-900">/docs/adr/</strong>.</p>
+                        <p class="text-gray-600">This practice treats critical decisions as version-controlled artifacts that can be proposed, debated, and accepted via Pull Request. An <strong class="text-gray-900">ArchitectAgent</strong> can even be tasked with auditing new PRs for compliance with existing ADRs.</p>
+                    </div>
+                </div>
+
+                <div class="p-6 bg-white rounded-lg shadow">
+                    <h3 class="text-xl font-semibold mb-4 text-blue-600">PR-Triggered Doc Agent Flow</h3>
+                    <p class="text-gray-600 mb-6">This model ensures documentation is versioned alongside code. A `DocAgent` is triggered by PRs to analyze the code diff and commit documentation updates *back to the same PR branch*, ensuring code and docs are reviewed and merged together.</p>
+                    <div class="step-item">
+                        <div class="step-dot"></div>
+                        <h4 class="font-semibold">1. PR Opened</h4>
+                        <p class="text-sm text-gray-600">Human or AI opens a Pull Request with code changes.</p>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-dot"></div>
+                        <h4 class="font-semibold">2. GitHub Action Triggers</h4>
+                        <p class="text-sm text-gray-600">`on: pull_request` workflow starts the `DocAgent`.</p>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-dot"></div>
+                        <h4 class="font-semibold">3. Agent Analyzes Diff</h4>
+                        <p class="text-sm text-gray-600">`DocAgent` analyzes the code diff and identifies which `/docs` files are now out-of-date.</p>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-dot"></div>
+                        <h4 class="font-semibold">4. Agent Commits Doc Updates</h4>
+                        <p class="text-sm text-gray-600">Agent pushes a new commit *to the same PR branch* with the documentation changes.</p>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-dot bg-red-600"></div>
+                        <h4 class="font-semibold">5. Unified Human Review</h4>
+                        <p class="text-sm text-gray-600">Human reviewer sees both code and doc changes together in one PR and merges.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="playbooks-content" class="content-section">
+            <h2 class="text-3xl font-bold tracking-tight text-gray-900 mb-4">End-to-End Playbooks</h2>
+            <div class="space-y-6">
+                <div class="p-6 bg-white rounded-lg shadow">
+                    <p class="text-lg text-gray-700 mb-6">These narrative examples demonstrate how all layers work in concert to create a cohesive, governed, and high-velocity system. Click to expand each playbook.</p>
+                </div>
+                
+                <div id="accordion-container" class="space-y-4">
+                    <div class="accordion-item">
+                        <button class="accordion-header">
+                            <span class="font-semibold text-lg text-blue-600">Playbook: Agentic Feature Lifecycle</span>
+                            <svg class="accordion-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
+                        <div class="accordion-content hidden">
+                            <ol class="list-decimal list-inside space-y-2 text-gray-600">
+                                <li>Human creates Issue #123 via YAML form.</li>
+                                <li>Triage Action adds it to the Project Board and sets `Assignee-Type: AI`.</li>
+                                <li>Dispatcher Action assigns #123 to `dev-agent-001`.</li>
+                                <li>Agent creates a worktree, commits `PLAN.md` (Plan SHA), implements code, and opens a PR.</li>
+                                <li>BMAD workflow runs. The Analyze bot posts: "✅ All tests pass. Coverage +3%."</li>
+                                <li>`team.human.seniors` member reviews the `PLAN.md`, the code, and the AI's analysis, then merges.</li>
+                                <li>Decide workflow closes Issue #123.</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <button class="accordion-header">
+                            <span class="font-semibold text-lg text-blue-600">Playbook: The BMAD Feedback Loop</span>
+                            <svg class="accordion-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
+                        <div class="accordion-content hidden">
+                            <ol class="list-decimal list-inside space-y-2 text-gray-600">
+                                <li>A human merges a PR for a new feature.</li>
+                                <li>The CI/CD `Measure` job notes 30% test coverage and outputs `coverage.json`.</li>
+                                <li>The `Analyze` bot posts a warning comment to the (now merged) PR.</li>
+                                <li>The `Decide` workflow (on `pull_request: closed`) fires.</li>
+                                <li>It closes the original feature issue #123.</li>
+                                <li>It also checks the Analyze job's output artifact and sees the low coverage.</li>
+                                <li>It *automatically creates a new Issue* titled "TECH DEBT: Increase coverage for feature-xyz.py".</li>
+                                <li>This new Issue is added to the current sprint backlog. The loop is complete.</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <button class="accordion-header">
+                            <span class="font-semibold text-lg text-blue-600">Playbook: AI-Driven Refactor Sprint</span>
+                            <svg class="accordion-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
+                        <div class="accordion-content hidden">
+                            <ol class="list-decimal list-inside space-y-2 text-gray-600">
+                                <li>An Architect creates 20 "Refactor" issues and bulk-sets `Assignee-Type: AI`.</li>
+                                <li>The `agent-dispatcher` Action runs on its schedule.</li>
+                                <li>It sees 20 items in the AI Backlog and spins up 5 available `RefactorAgents`.</li>
+                                <li>The agents use `git worktrees` to work in parallel without conflict.</li>
+                                <li>Within hours, 20 PRs are opened, each with its own `plan.md`, `tasks.md`, and code changes.</li>
+                                <li>The PRs are now ready for human review from `team.human.seniors`.</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="governance-content" class="content-section">
+            <h2 class="text-3xl font-bold tracking-tight text-gray-900 mb-4">Governance Appendix</h2>
+            <div class="p-6 bg-white rounded-lg shadow">
+                <p class="text-lg text-gray-700 mb-6">This operating model embeds governance directly into the GitHub-native workflow. Governance is not a separate-stage gate; it is a continuous, automated, and auditable process. The key pillars are:</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                        <h3 class="font-semibold text-blue-600">1. Role-Based Access Control (RBAC)</h3>
+                        <p class="text-sm text-gray-600">A strict, team-based matrix (see Organization) that segregates human and AI permissions, enforcing the principle of least privilege.</p>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                        <h3 class="font-semibold text-blue-600">2. MCP "Allow List" Registry</h3>
+                        <p class="text-sm text-gray-600">A human-in-the-loop review gate for approving all new AI agent capabilities (tools, APIs). If it's not in the internal registry, no agent can run it.</p>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                        <h3 class="font-semibold text-blue-600">3. Risk & Ambiguity Routing</h3>
+                        <p class="text-sm text-gray-600">A human-in-the-loop (HITL) framework (see Specification) that ensures high-risk or high-ambiguity tasks receive mandatory human oversight.</p>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                        <h3 class="font-semibold text-blue-600">4. Spec-as-Contract</h3>
+                        <p class="text-sm text-gray-600">The use of CI/CD (e.g., Contract Testing, RAG Evals in the BMAD loop) to automatically enforce that all code *conforms* to its original specification.</p>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 col-span-1 md:col-span-2">
+                        <h3 class="font-semibold text-blue-600">5. The "MentorScript" Flywheel</h3>
+                        <p class="text-sm text-gray-600">The formal process of codifying human PR feedback *back into* the `constitution.md` file, ensuring that human insight is captured and used to continuously train the entire agentic system.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Floating Action Buttons -->
+    <div id="floating-buttons" class="fixed bottom-6 right-6 flex flex-col space-y-3 z-40">
+        <!-- Back to Architecture Button (hidden by default) -->
+        <button id="back-to-architecture-btn" class="hidden bg-blue-600 text-white p-3 rounded-full shadow-lg hover:bg-blue-700 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2" title="Back to Core Architecture" aria-label="Back to Core Architecture">
+            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+        </button>
+
+        <!-- Back to Top Button (hidden by default) -->
+        <button id="back-to-top-btn" class="hidden bg-gray-700 text-white p-3 rounded-full shadow-lg hover:bg-gray-800 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2" title="Back to Top" aria-label="Back to Top">
+            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
+            </svg>
+        </button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const navLinks = document.querySelectorAll('.nav-link');
+            const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const contentSections = document.querySelectorAll('.content-section');
+            const architectureLinks = document.querySelectorAll('#architecture-content button[data-section]');
+            const backToArchitectureBtn = document.getElementById('back-to-architecture-btn');
+            const backToTopBtn = document.getElementById('back-to-top-btn');
+            const breadcrumbCurrent = document.getElementById('breadcrumb-current');
+            const breadcrumbCurrentContainer = document.getElementById('breadcrumb-current-container');
+            const breadcrumbLinks = document.querySelectorAll('.breadcrumb-link');
+
+            // Track navigation history for "back to architecture" feature
+            let navigationHistory = [];
+            let currentSection = 'overview';
+
+            // Section display names for breadcrumb
+            const sectionNames = {
+                'overview': 'Overview',
+                'principles': 'Principles',
+                'architecture': 'Core Architecture',
+                'organization': 'Organization',
+                'planning': 'Planning',
+                'specification': 'Specification',
+                'execution': 'Execution',
+                'bmad': 'CI/CD (BMAD)',
+                'knowledge': 'Knowledge',
+                'playbooks': 'Playbooks',
+                'governance': 'Governance'
+            };
+
+            function updateBreadcrumb(sectionId) {
+                if (sectionId === 'overview') {
+                    breadcrumbCurrentContainer.classList.add('hidden');
+                } else {
+                    breadcrumbCurrentContainer.classList.remove('hidden');
+                    breadcrumbCurrent.textContent = sectionNames[sectionId] || sectionId;
+                }
+            }
+
+            function updateBackToArchitectureButton() {
+                // Show "back to architecture" button if we navigated from architecture
+                if (navigationHistory.length > 0 && navigationHistory[navigationHistory.length - 1] === 'architecture' && currentSection !== 'architecture') {
+                    backToArchitectureBtn.classList.remove('hidden');
+                } else {
+                    backToArchitectureBtn.classList.add('hidden');
+                }
+            }
+
+            function showSection(sectionId, fromHistory = false) {
+                let found = false;
+                contentSections.forEach(section => {
+                    if (section.id === `${sectionId}-content`) {
+                        section.classList.add('active');
+                        found = true;
+                    } else {
+                        section.classList.remove('active');
+                    }
+                });
+
+                if (!found) {
+                    console.warn(`Section content not found for ID: ${sectionId}-content`);
+                    return;
+                }
+
+                // Track navigation history
+                if (!fromHistory && sectionId !== currentSection) {
+                    navigationHistory.push(currentSection);
+                    if (navigationHistory.length > 5) {
+                        navigationHistory.shift(); // Keep only last 5
+                    }
+                }
+                currentSection = sectionId;
+
+                navLinks.forEach(link => {
+                    if (link.dataset.section === sectionId) {
+                        link.classList.add('active');
+                    } else {
+                        link.classList.remove('active');
+                    }
+                });
+
+                mobileNavLinks.forEach(link => {
+                    if (link.dataset.section === sectionId) {
+                        link.classList.add('bg-blue-100', 'text-blue-700');
+                    } else {
+                        link.classList.remove('bg-blue-100', 'text-blue-700');
+                    }
+                });
+
+                // Update URL hash
+                if (!fromHistory) {
+                    window.location.hash = sectionId;
+                }
+
+                // Update breadcrumb
+                updateBreadcrumb(sectionId);
+
+                // Update back to architecture button
+                updateBackToArchitectureButton();
+
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const sectionId = e.currentTarget.dataset.section;
+                    showSection(sectionId);
+                });
+            });
+
+            architectureLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const sectionId = e.currentTarget.dataset.section;
+                    showSection(sectionId);
+                });
+            });
+
+            mobileMenuButton.addEventListener('click', () => {
+                const isHidden = mobileMenu.classList.toggle('hidden');
+                mobileMenuButton.setAttribute('aria-expanded', !isHidden);
+                
+                const icons = mobileMenuButton.querySelectorAll('svg');
+                icons[0].classList.toggle('hidden', !isHidden);
+                icons[1].classList.toggle('hidden', isHidden);
+            });
+
+            mobileNavLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const sectionId = e.currentTarget.dataset.section;
+                    showSection(sectionId);
+                    
+                    mobileMenu.classList.add('hidden');
+                    mobileMenuButton.setAttribute('aria-expanded', 'false');
+                    const icons = mobileMenuButton.querySelectorAll('svg');
+                    icons[0].classList.remove('hidden');
+                    icons[1].classList.add('hidden');
+                });
+            });
+
+            const bmadBoxes = document.querySelectorAll('.bmad-box');
+            bmadBoxes.forEach(box => {
+                box.addEventListener('click', (e) => {
+                    const targetId = e.currentTarget.dataset.target;
+                    const detailsDiv = document.getElementById(`${targetId}-details`);
+                    if (detailsDiv) {
+                        const isHidden = detailsDiv.classList.contains('hidden');
+                        document.querySelectorAll('.bmad-details').forEach(d => d.classList.add('hidden'));
+                        
+                        if(isHidden) {
+                            detailsDiv.classList.remove('hidden');
+                        }
+                    }
+                });
+            });
+
+            const accordionHeaders = document.querySelectorAll('.accordion-header');
+            accordionHeaders.forEach(header => {
+                header.addEventListener('click', () => {
+                    const content = header.nextElementSibling;
+                    const isOpen = header.classList.contains('open');
+                    
+                    document.querySelectorAll('.accordion-header').forEach(h => h.classList.remove('open'));
+                    document.querySelectorAll('.accordion-content').forEach(c => c.classList.add('hidden'));
+                    
+                    if (!isOpen) {
+                        header.classList.add('open');
+                        content.classList.remove('hidden');
+                    }
+                });
+            });
+
+            try {
+                const ctx = document.getElementById('teamChart');
+                if (ctx) {
+                    new Chart(ctx.getContext('2d'), {
+                        type: 'bar',
+                        data: {
+                            labels: ['team.org.owners', 'team.human.seniors', 'team.human.engineers', 'team.ai.developers', 'team.ai.evaluators'],
+                            datasets: [{
+                                label: 'Illustrative Team Size',
+                                data: [2, 5, 20, 10, 3],
+                                backgroundColor: [
+                                    'rgba(239, 68, 68, 0.6)',
+                                    'rgba(59, 130, 246, 0.6)',
+                                    'rgba(34, 197, 94, 0.6)',
+                                    'rgba(249, 115, 22, 0.6)',
+                                    'rgba(168, 85, 247, 0.6)'
+                                ],
+                                borderColor: [
+                                    'rgba(239, 68, 68, 1)',
+                                    'rgba(59, 130, 246, 1)',
+                                    'rgba(34, 197, 94, 1)',
+                                    'rgba(249, 115, 22, 1)',
+                                    'rgba(168, 85, 247, 1)'
+                                ],
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            indexAxis: 'y',
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    display: false
+                                },
+                                tooltip: {
+                                    callbacks: {
+                                        label: function(context) {
+                                            return `${context.label}: ${context.raw} members`;
+                                        }
+                                    }
+                                }
+                            },
+                            scales: {
+                                x: {
+                                    beginAtZero: true,
+                                    title: {
+                                        display: true,
+                                        text: 'Illustrative Size'
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+            } catch (e) {
+                console.error('Failed to initialize chart:', e);
+            }
+
+            // Breadcrumb navigation
+            breadcrumbLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const sectionId = e.currentTarget.dataset.section;
+                    showSection(sectionId);
+                });
+            });
+
+            // Back to Architecture button
+            backToArchitectureBtn.addEventListener('click', () => {
+                showSection('architecture');
+            });
+
+            // Back to Top button
+            backToTopBtn.addEventListener('click', () => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+
+            // Show/hide back to top button based on scroll position
+            let scrollTimer;
+            window.addEventListener('scroll', () => {
+                clearTimeout(scrollTimer);
+                scrollTimer = setTimeout(() => {
+                    if (window.scrollY > 200) {
+                        backToTopBtn.classList.remove('hidden');
+                    } else {
+                        backToTopBtn.classList.add('hidden');
+                    }
+                }, 100);
+            });
+
+            // Keyboard navigation
+            document.addEventListener('keydown', (e) => {
+                // Ignore if user is typing in an input field
+                if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+                    return;
+                }
+
+                // Escape key: Close mobile menu
+                if (e.key === 'Escape' && !mobileMenu.classList.contains('hidden')) {
+                    mobileMenu.classList.add('hidden');
+                    mobileMenuButton.setAttribute('aria-expanded', 'false');
+                    const icons = mobileMenuButton.querySelectorAll('svg');
+                    icons[0].classList.remove('hidden');
+                    icons[1].classList.add('hidden');
+                    return;
+                }
+
+                // Arrow keys: Navigate between sections
+                const sections = ['overview', 'principles', 'architecture', 'organization', 'planning', 'specification', 'execution', 'bmad', 'knowledge', 'playbooks', 'governance'];
+                const currentIndex = sections.indexOf(currentSection);
+
+                if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    if (currentIndex > 0) {
+                        showSection(sections[currentIndex - 1]);
+                    }
+                } else if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    if (currentIndex < sections.length - 1) {
+                        showSection(sections[currentIndex + 1]);
+                    }
+                }
+
+                // 'h' key: Show keyboard shortcuts help (future enhancement)
+                if (e.key === 'h' && !e.ctrlKey && !e.metaKey && !e.altKey) {
+                    console.log('Keyboard shortcuts:\n- Arrow keys: Navigate sections\n- Esc: Close mobile menu\n- h: Show this help');
+                }
+            });
+
+            // Handle URL hash navigation
+            function handleHashChange() {
+                const hash = window.location.hash.slice(1); // Remove the '#'
+                if (hash && sectionNames[hash]) {
+                    showSection(hash, true); // fromHistory = true to prevent adding to URL again
+                }
+            }
+
+            // Listen for hash changes (browser back/forward)
+            window.addEventListener('hashchange', handleHashChange);
+
+            // Handle initial URL hash on page load
+            if (window.location.hash) {
+                handleHashChange();
+            } else {
+                showSection('overview');
+            }
+        });
+    </script>
+</body>
+</html>
